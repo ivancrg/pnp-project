@@ -26,7 +26,23 @@ Flickable {
                                     - heater2Switch.width
                                     - pumpSwitch.width) / 2
 
-    //color: "#100000ff"
+
+    property string currentActiveMode: rapidModeName // Read from arduino
+    property string customModeName: "custom_mode"
+    property string rapidModeName: "rapid_mode"
+    property string autoModeName: "auto_mode"
+
+    property bool temperatureConfigVisible: currentActiveMode == autoModeName
+    property bool actuatorsConfigVisible: currentActiveMode == customModeName || currentActiveMode == rapidModeName
+    property bool actuatorsConfigEnabled: currentActiveMode !== rapidModeName
+
+    Component.onCompleted: {
+        if (currentActiveMode == rapidModeName) {
+            heater1Switch.position = 1;
+            heater2Switch.position = 1;
+            pumpSwitch.position = 1;
+        }
+    }
 
     clip: true
     anchors.fill: parent
@@ -34,7 +50,7 @@ Flickable {
     contentWidth: parent.width
     contentHeight: temperaturesConfigLabel.height
                    + dialsContainer.height
-                   + heaterPumpLabel.height
+                   + actuatorsLabel.height
                    + 300
 
     ScrollBar.vertical: ScrollBar {
@@ -44,10 +60,10 @@ Flickable {
         anchors.bottom: root.bottom
     }
 
-    // Temperatures configuration label
+    // Mode selection label
     Label {
-        id: temperaturesConfigLabel
-        text: "Temperatures configuration"
+        id: modeSelectionLabel
+        text: "Modes"
         font.pixelSize: 28
 
         anchors {
@@ -58,11 +74,53 @@ Flickable {
         }
     }
 
+    // Mode selection
+    ModeSelection {
+        id: modeSelection
+        width: parent.width * 3 / 4
+        height: 35
+        activeMode: currentActiveMode
+        onActiveModeChanged: {
+            currentActiveMode = activeMode
+            console.log("update mode change to arduino", currentActiveMode)
+        }
+
+        onRapidModeClicked: {
+            heater1Switch.position = 1;
+            heater2Switch.position = 1;
+            pumpSwitch.position = 1;
+        }
+
+        anchors {
+            top: modeSelectionLabel.bottom
+            horizontalCenter: parent.horizontalCenter
+
+            margins: 32
+            leftMargin: 48
+        }
+    }
+
+    // Temperatures configuration label
+    Label {
+        id: temperaturesConfigLabel
+        text: "Temperatures configuration"
+        font.pixelSize: 28
+        visible: temperatureConfigVisible
+
+        anchors {
+            top: modeSelection.bottom
+            left: parent.left
+            topMargin: 32
+            leftMargin: 32
+        }
+    }
+
     // Configure temperatures
     Item {
         id: dialsContainer
         width: parent.width * 3 / 4
         height: childrenRect.height
+        visible: temperatureConfigVisible
 
         anchors {
             top: temperaturesConfigLabel.bottom
@@ -170,14 +228,15 @@ Flickable {
         }
     }
 
-    // Heater and pump label
+    // Actuators label
     Label {
-        id: heaterPumpLabel
+        id: actuatorsLabel
         text: "Actuators"
         font.pixelSize: 28
+        visible: actuatorsConfigVisible
 
         anchors {
-            top: dialsContainer.bottom
+            top: temperatureConfigVisible ? dialsContainer.bottom : modeSelection.bottom
             left: parent.left
             topMargin: 32
             leftMargin: 32
@@ -188,9 +247,10 @@ Flickable {
         id: switchesContainer
         width: parent.width * 3 / 4
         height: childrenRect.height
+        visible: actuatorsConfigVisible
 
         anchors {
-            top: heaterPumpLabel.bottom
+            top: actuatorsLabel.bottom
             horizontalCenter: parent.horizontalCenter
             topMargin: 32
             leftMargin: 48
@@ -207,6 +267,8 @@ Flickable {
                 left: parent.left
             }
 
+            enabled: actuatorsConfigEnabled
+
             onPositionChanged: console.log("update h1 act")
         }
 
@@ -222,6 +284,8 @@ Flickable {
                 leftMargin: switchsLeftMargin
             }
 
+            enabled: actuatorsConfigEnabled
+
             onPositionChanged: console.log("update h2 act")
         }
 
@@ -236,6 +300,8 @@ Flickable {
                 left: heater2Switch.right
                 leftMargin: switchsLeftMargin
             }
+
+            enabled: actuatorsConfigEnabled
 
             onPositionChanged: console.log("update pump act")
         }

@@ -6,8 +6,8 @@ ApplicationWindow {
     readonly property real aspectRatio: width / height
     property bool menuOpened: drawer.position
     property string buttonFontColor: Material.theme === Material.Dark ? "#ffffff" : "#000000"
-    property QtObject activeDrawerItem: heatingConfigActNavigation
-    property string activeLoaderItem: "ConfigActScreen.qml"
+    property QtObject activeDrawerItem: ledNavigation
+    property string activeLoaderItem: "LEDControlScreen.qml"
 
     id: window
     width: 1280
@@ -166,7 +166,7 @@ ApplicationWindow {
 
             onClicked: {
                 activeDrawerItem = heatingConfigActNavigation
-                activeLoaderItem = "ConfigurationScreen.qml"
+                activeLoaderItem = "ConfigActScreen.qml"
             }
         }
     }

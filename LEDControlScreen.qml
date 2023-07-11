@@ -1,11 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
-import QtGraphicalEffects as Qge
 
-Rectangle {
-    //    color: "#1000ff00"
-
+Item {
     property real effectsHorizontalMargin: (width
                                             - staticEffect.width
                                             - flashEffect.width
