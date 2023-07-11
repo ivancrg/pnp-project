@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
+import LEDControl
 
 Item {
     property real effectsHorizontalMargin: (width
@@ -12,9 +13,11 @@ Item {
                                             - waveEffect.width
                                             - offEffect.width
                                             - 48) / 7
-    property string activeEffectName: "static"  // Set from arduino
-    property string activeEffectColor: "#007777" // Set from arduino
-    property string buttonFontColor: Material.theme === Material.Dark ? "#ffffff" : "#000000"
+    property string activeEffectName: ledControl.currentEffect;
+    property string activeEffectColor: ledControl.currentColor;
+    property string buttonFontColor: Material.theme === Material.Dark ? "#ffffff" : "#000000"    
+
+    LEDC { id: ledControl }
 
     // Presets label
     Label {
@@ -48,27 +51,27 @@ Item {
         Preset {
             id: preset1
 
-            presetColor: "#ff0000" // Set from arduino
-            presetEffect: "double_flash" // Set from arduino
+            presetColor: {ledControl.presetColors[0] !== undefined ? ledControl.presetColors[0] : "#000000"}
+            presetEffect: {ledControl.presetEffects[0] !== undefined ? ledControl.presetEffects[0] : "question_mark"}
 
             anchors {
                 top: parent.top
                 left: parent.left
             }
 
-            onPresetColorChanged: {
-                console.log("Send info to arduino about current effect 1")
-            }
-
-            onPresetEffectChanged: {
-                console.log("Send info to arduino about current effect 1")
+            onPresetColorChanged: ledControl.changePreset(0, presetEffect, presetColor)
+            onPresetEffectChanged: ledControl.changePreset(0, presetEffect, presetColor)
+            onPresetPressAndHold: {
+                ledControl.setActivePreset(0);
+                ledControl.setShowCurrentEffect(false);
             }
         }
 
         Preset {
             id: preset2
 
-            presetColor: "#0000ff"
+            presetColor: {ledControl.presetColors[1] !== undefined ? ledControl.presetColors[1] : "#000000"}
+            presetEffect: {ledControl.presetEffects[1] !== undefined ? ledControl.presetEffects[1] : "question_mark"}
 
             anchors {
                 top: parent.top
@@ -77,19 +80,19 @@ Item {
                 leftMargin: 8
             }
 
-            onPresetColorChanged: {
-                console.log("Send info to arduino about current effect 2")
-            }
-
-            onPresetEffectChanged: {
-                console.log("Send info to arduino about current effect 2")
+            onPresetColorChanged: ledControl.changePreset(1, presetEffect, presetColor)
+            onPresetEffectChanged: ledControl.changePreset(1, presetEffect, presetColor)
+            onPresetPressAndHold: {
+                ledControl.setActivePreset(1);
+                ledControl.setShowCurrentEffect(false);
             }
         }
 
         Preset {
             id: preset3
 
-            presetColor: "#00ff00"
+            presetColor: {ledControl.presetColors[2] !== undefined ? ledControl.presetColors[2] : "#000000"}
+            presetEffect: {ledControl.presetEffects[2] !== undefined ? ledControl.presetEffects[2] : "question_mark"}
 
             anchors {
                 top: parent.top
@@ -98,19 +101,19 @@ Item {
                 leftMargin: 8
             }
 
-            onPresetColorChanged: {
-                console.log("Send info to arduino about current effect 3")
-            }
-
-            onPresetEffectChanged: {
-                console.log("Send info to arduino about current effect 3")
+            onPresetColorChanged: ledControl.changePreset(2, presetEffect, presetColor)
+            onPresetEffectChanged: ledControl.changePreset(2, presetEffect, presetColor)
+            onPresetPressAndHold: {
+                ledControl.setActivePreset(2);
+                ledControl.setShowCurrentEffect(false);
             }
         }
 
         Preset {
             id: preset4
 
-            presetColor: "#ffff00"
+            presetColor: {ledControl.presetColors[3] !== undefined ? ledControl.presetColors[3] : "#000000"}
+            presetEffect: {ledControl.presetEffects[3] !== undefined ? ledControl.presetEffects[3] : "question_mark"}
 
             anchors {
                 top: parent.top
@@ -119,19 +122,19 @@ Item {
                 leftMargin: 8
             }
 
-            onPresetColorChanged: {
-                console.log("Send info to arduino about current effect 4")
-            }
-
-            onPresetEffectChanged: {
-                console.log("Send info to arduino about current effect 4")
+            onPresetColorChanged: ledControl.changePreset(3, presetEffect, presetColor)
+            onPresetEffectChanged: ledControl.changePreset(3, presetEffect, presetColor)
+            onPresetPressAndHold: {
+                ledControl.setActivePreset(3);
+                ledControl.setShowCurrentEffect(false);
             }
         }
 
         Preset {
             id: preset5
 
-            presetColor: "#00ffff"
+            presetColor: {ledControl.presetColors[4] !== undefined ? ledControl.presetColors[4] : "#000000"}
+            presetEffect: {ledControl.presetEffects[4] !== undefined ? ledControl.presetEffects[4] : "question_mark"}
 
             anchors {
                 top: parent.top
@@ -140,19 +143,19 @@ Item {
                 leftMargin: 8
             }
 
-            onPresetColorChanged: {
-                console.log("Send info to arduino about current effect 5")
-            }
-
-            onPresetEffectChanged: {
-                console.log("Send info to arduino about current effect 5")
+            onPresetColorChanged: ledControl.changePreset(4, presetEffect, presetColor)
+            onPresetEffectChanged: ledControl.changePreset(4, presetEffect, presetColor)
+            onPresetPressAndHold: {
+                ledControl.setActivePreset(4);
+                ledControl.setShowCurrentEffect(false);
             }
         }
 
         Preset {
             id: preset6
 
-            presetColor: "#ff00ff"
+            presetColor: {ledControl.presetColors[5] !== undefined ? ledControl.presetColors[5] : "#000000"}
+            presetEffect: {ledControl.presetEffects[5] !== undefined ? ledControl.presetEffects[5] : "question_mark"}
 
             anchors {
                 top: parent.top
@@ -161,12 +164,11 @@ Item {
                 leftMargin: 8
             }
 
-            onPresetColorChanged: {
-                console.log("Send info to arduino about current effect 6")
-            }
-
-            onPresetEffectChanged: {
-                console.log("Send info to arduino about current effect 6")
+            onPresetColorChanged: ledControl.changePreset(5, presetEffect, presetColor)
+            onPresetEffectChanged: ledControl.changePreset(5, presetEffect, presetColor)
+            onPresetPressAndHold: {
+                ledControl.setActivePreset(5);
+                ledControl.setShowCurrentEffect(false);
             }
         }
     }
@@ -213,7 +215,7 @@ Item {
                 left: parent.left
             }
 
-            onEffectClicked: activeEffectName = "static"
+            onEffectClicked: ledControl.setCurrentEffect("static")
         }
 
         Effect {
@@ -231,7 +233,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: activeEffectName = "pulse"
+            onEffectClicked: ledControl.setCurrentEffect("pulse")
         }
 
         Effect {
@@ -249,7 +251,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: activeEffectName = "flash"
+            onEffectClicked: ledControl.setCurrentEffect("flash")
         }
 
         Effect {
@@ -267,7 +269,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: activeEffectName = "double_flash"
+            onEffectClicked: ledControl.setCurrentEffect("double_flash")
         }
 
         Effect {
@@ -285,7 +287,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: activeEffectName = "cycle"
+            onEffectClicked: ledControl.setCurrentEffect("cycle")
         }
 
         Effect {
@@ -303,7 +305,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: activeEffectName = "wave"
+            onEffectClicked: ledControl.setCurrentEffect("wave")
         }
 
         Effect {
@@ -321,7 +323,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: activeEffectName = "off"
+            onEffectClicked: ledControl.setCurrentEffect("off")
         }
     }
 
@@ -337,12 +339,14 @@ Item {
             topMargin: 12
         }
 
+        onActiveColorChanged: ledControl.setCurrentColor(activeColor)
+
         visible: activeEffectName !== "cycle" && activeEffectName !== "off"
     }
 
     EffectPreview {
         id: effectPreview
-        effectColor: effectColorPicker.activeColor
+        effectColor: activeEffectColor
         effectName: activeEffectName
         height: 75
         width: 75
@@ -358,7 +362,7 @@ Item {
 
     Button {
         id: confirmEffect
-        text: "Confirm"
+        text: "Show Effect"
         font.pixelSize: 16
 
         icon.color: Material.color(Material.Teal)
@@ -373,8 +377,6 @@ Item {
             topMargin: 24
         }
 
-        onClicked: {
-            console.log("Send info to arduino about current effect")
-        }
+        onClicked: ledControl.setShowCurrentEffect(true);
     }
 }

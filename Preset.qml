@@ -23,6 +23,8 @@ Rectangle {
     property real presetWidth: 50
     property real presetHeight: 50
 
+    signal presetPressAndHold
+
     width: presetWidth
     height: presetHeight
 
@@ -209,5 +211,7 @@ Rectangle {
         // onClicked: presetClicked()
         onClicked: colorDialog.open()
         onDoubleClicked: effectDialog.open()
+        pressAndHoldInterval: 500
+        onPressAndHold: presetPressAndHold()
     }
 }

@@ -78,6 +78,7 @@ ApplicationWindow {
             onClicked: {
                 activeDrawerItem = ledNavigation
                 activeLoaderItem = "LEDControlScreen.qml"
+                drawer.close()
             }
         }
 
@@ -117,6 +118,7 @@ ApplicationWindow {
             onClicked: {
                 activeDrawerItem = heatingStatusNavigation
                 activeLoaderItem = "CurrentStatusScreen.qml"
+                drawer.close()
             }
         }
 
@@ -142,6 +144,7 @@ ApplicationWindow {
             onClicked: {
                 activeDrawerItem = heatingActuatorsNavigation
                 activeLoaderItem = "ActuatorsScreen.qml"
+                drawer.close()
             }
         }*/
 
@@ -167,6 +170,7 @@ ApplicationWindow {
             onClicked: {
                 activeDrawerItem = heatingConfigActNavigation
                 activeLoaderItem = "ConfigActScreen.qml"
+                drawer.close()
             }
         }
     }

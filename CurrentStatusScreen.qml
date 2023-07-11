@@ -2,26 +2,37 @@ import QtQuick 2.0
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtCharts 2.0
+import HeatingControl
 
 Flickable {
     id: root
 
-    property real roomTemp: 24.5 // Connect to arduino sensor
-    property real releaseTemp: 34.5 // Connect to arduino sensor
-    property real returnTemp: 23.5 // Connect to arduino sensor
+    HeatingC { id: heatingControl }
+
+    property real roomTemp: heatingControl.temperatures["room"]
+    property real releaseTemp: heatingControl.temperatures["release"]
+    property real returnTemp: heatingControl.temperatures["return"]
     property real dialsLeftMargin: (dialsContainer.width
                                     - roomTempDial.width
                                     - releaseTempDial.width
                                     - returnTempDial.width) / 2
-    property bool heater1On: true  // Read from arduino
-    property bool heater2On: false  // Read from arduino
-    property bool pumpOn: true  // Read from arduino
+
+    property bool heater1On: heatingControl.relays["heater_1"]
+    property bool heater2On: heatingControl.relays["heater_2"]
+    property bool pumpOn: heatingControl.relays["pump"]
     property real statusLeftMargin: (statusContainer.width
                                      - heater1Status.width
                                      - heater2Status.width
                                      - pumpStatus.width) / 2
 
-    //color: "#100000ff"
+
+    Component.onCompleted: {
+        for (var i = 0; i < heatingControl.temperatureHistory.length; ++i)
+            temperatureHistorySeries.append(i, heatingControl.temperatureHistory[i])
+
+        for (let i = 0; i < heatingControl.consumptionHistory.length; ++i)
+            consumptionHistorySeries.append(i, heatingControl.consumptionHistory[i])
+    }
 
     clip: true
     anchors.fill: parent
@@ -31,7 +42,10 @@ Flickable {
                    + dialsContainer.height
                    + heaterPumpLabel.height
                    + statusContainer.height
+                   + temperatureHistoryLabel.height
                    + temperatureHistoryChart.height
+                   + consumptionHistoryLabel.height
+                   + consumptionHistoryChart.height
                    + 300
 
     ScrollBar.vertical: ScrollBar {
@@ -227,6 +241,7 @@ Flickable {
         }
     }
 
+    // Temperature history chart
     ChartView {
         id: temperatureHistoryChart
         width: parent.width * 3 / 4
@@ -239,23 +254,81 @@ Flickable {
             topMargin: 32
         }
 
-        ValueAxis {
-            id: yAxis
-            min: 0
-            max: 40
-            labelFormat: "%.0f"
+        axes: [
+            ValueAxis{
+                id: xAxisTemperatureHistory
+                min: 0
+                max: heatingControl.temperatureHistory.length
+                labelFormat: "%.0f"
+                titleText: "Time [period]"
+            },
+            ValueAxis{
+                id: yAxisTemperatureHistory
+                min: Math.min(...heatingControl.temperatureHistory) - 5
+                max: Math.max(...heatingControl.temperatureHistory) + 5
+                labelFormat: "%.0f"
+                titleText: "Temperature [°C]"
+            }
+        ]
+
+        SplineSeries {
+            id: temperatureHistorySeries
+            axisX: xAxisTemperatureHistory
+            axisY: yAxisTemperatureHistory
+            name: "Room temperature"
+            width: 1
+        }
+    }
+
+    // Consumption history label
+    Label {
+        id: consumptionHistoryLabel
+        text: "Consumption history"
+        font.pixelSize: 28
+
+        anchors {
+            top: temperatureHistoryChart.bottom
+            left: parent.left
+            topMargin: 32
+            leftMargin: 32
+        }
+    }
+
+    ChartView {
+        id: consumptionHistoryChart
+        width: parent.width * 3 / 4
+        height: width * 9 / 16
+
+        anchors {
+            top: consumptionHistoryLabel.bottom
+            horizontalCenter: parent.horizontalCenter
+
+            topMargin: 32
         }
 
-        LineSeries {
-            id: lineSeries1
-            axisY: yAxis
-            name: "Room temperature"
-            width: 3
-            XYPoint { x: 0; y: 22 }
-            XYPoint { x: 1; y: 22.9 }
-            XYPoint { x: 2; y: 23.5 }
-            XYPoint { x: 3; y: 23.9 }
-            XYPoint { x: 4; y: 24.1 }
+        axes: [
+            ValueAxis{
+                id: xAxisConsumptionHistory
+                min: 0
+                max: heatingControl.consumptionHistory.length
+                labelFormat: "%.0f"
+                titleText: "Time [period]"
+            },
+            ValueAxis{
+                id: yAxisConsumptionHistory
+                min: Math.min(...heatingControl.consumptionHistory) - 200
+                max: Math.max(...heatingControl.consumptionHistory) + 200
+                labelFormat: "%.0f"
+                titleText: "Power [W]"
+            }
+        ]
+
+        SplineSeries {
+            id: consumptionHistorySeries
+            axisX: xAxisConsumptionHistory
+            axisY: yAxisConsumptionHistory
+            name: "Energy consumption"
+            width: 1
         }
     }
 }

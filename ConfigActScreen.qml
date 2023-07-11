@@ -2,15 +2,18 @@ import QtQuick 2.0
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtCharts 2.0
+import HeatingControl
 
 Flickable {
     id: root
 
-    property real roomTemp: 24.5 // Connect to arduino data
-    property real roomIntervalTemp: 5 // Connect to arduino data
-    property real heater1DeltaTemp: 34.5 // Connect to arduino data
-    property real heater2DeltaTemp: 23.5 // Connect to arduino data
-    property real pumpDeltaTemp: 23.5 // Connect to arduino data
+    HeatingC { id: heatingControl }
+
+    property real roomTemp: heatingControl.temperatures["p_room"]
+    property real roomIntervalTemp: heatingControl.temperatures["p_room_int"]
+    property real heater1DeltaTemp: heatingControl.temperatures["p_heater_1_delta"]
+    property real heater2DeltaTemp: heatingControl.temperatures["p_heater_2_delta"]
+    property real pumpDeltaTemp: heatingControl.temperatures["p_pump_delta"]
     property real dialsLeftMargin: (dialsContainer.width
                                     - roomDial.width
                                     - roomIntervalDial.width
@@ -18,16 +21,16 @@ Flickable {
                                     - heater2DeltaDial.width
                                     - pumpDeltaDial.width) / 4
 
-    property bool heater1On: true  // Read from arduino
-    property bool heater2On: false  // Read from arduino
-    property bool pumpOn: true  // Read from arduino
+    property bool heater1On: heatingControl.relays["heater_1"]
+    property bool heater2On: heatingControl.relays["heater_2"]
+    property bool pumpOn: heatingControl.relays["pump"]
     property real switchsLeftMargin: (switchesContainer.width
                                     - heater1Switch.width
                                     - heater2Switch.width
                                     - pumpSwitch.width) / 2
 
 
-    property string currentActiveMode: rapidModeName // Read from arduino
+    property string currentActiveMode: heatingControl.heatingMode
     property string customModeName: "custom_mode"
     property string rapidModeName: "rapid_mode"
     property string autoModeName: "auto_mode"
@@ -81,8 +84,14 @@ Flickable {
         height: 35
         activeMode: currentActiveMode
         onActiveModeChanged: {
-            currentActiveMode = activeMode
-            console.log("update mode change to arduino", currentActiveMode)
+            heatingControl.setHeatingMode(activeMode)
+        }
+
+        onCustomModeClicked: {
+            heater1Switch.position = heater2Switch.position = pumpSwitch.position = 0;
+            heatingControl.changeRelay("heater_1", false);
+            heatingControl.changeRelay("heater_2", false);
+            heatingControl.changeRelay("pump", false);
         }
 
         onRapidModeClicked: {
@@ -136,7 +145,7 @@ Flickable {
 
             labelText: "Room"
             initialTemperatureValue: roomTemp
-            onPressedChanged: { if (!pressed) console.log("Arduino update room", temperatureValue) }
+            onPressedChanged: if (!pressed) heatingControl.changeTemperature("p_room", temperatureValue)
 
             hoverEnabled: true
             hoverText: "Wanted room temperature."
@@ -154,7 +163,7 @@ Flickable {
             labelText: "Room Interval"
             dialMinValue: 0; dialMaxValue: 5
             initialTemperatureValue: roomIntervalTemp
-            onPressedChanged: { if (!pressed) console.log("Arduino update room interval", temperatureValue) }
+            onPressedChanged: if (!pressed) heatingControl.changeTemperature("p_room_int", temperatureValue)
 
             hoverEnabled: true
             hoverText: "Describes maximum deviation from wanted room temperature in order for it to be considered correct."
@@ -174,7 +183,7 @@ Flickable {
             labelText: "Heater 1 Delta"
             dialMinValue: 0; dialMaxValue: 10
             initialTemperatureValue: heater1DeltaTemp
-            onPressedChanged: { if (!pressed) console.log("Arduino update heater1", temperatureValue) }
+            onPressedChanged: if (!pressed) heatingControl.changeTemperature("p_heater_1_delta", temperatureValue)
 
             hoverEnabled: true
             hoverText: "Minimum temperature delta between current and wanted room temperatures (in favour of wanted) in order for Heater 1 to be turned on."
@@ -194,7 +203,7 @@ Flickable {
             labelText: "Heater 2 Delta"
             dialMinValue: 0; dialMaxValue: 10
             initialTemperatureValue: heater2DeltaTemp
-            onPressedChanged: { if (!pressed) console.log("Arduino update heater2", temperatureValue) }
+            onPressedChanged: if (!pressed) heatingControl.changeTemperature("p_heater_2_delta", temperatureValue)
 
             hoverEnabled: true
             hoverText: "Minimum temperature delta between current and wanted room temperatures (in favour of wanted) in order for Heater 2 to be turned on."
@@ -214,7 +223,7 @@ Flickable {
             labelText: "Pump Delta"
             dialMinValue: 0; dialMaxValue: 20
             initialTemperatureValue: pumpDeltaTemp
-            onPressedChanged: { if (!pressed) console.log("Arduino update pump", temperatureValue) }
+            onPressedChanged: if (!pressed) heatingControl.changeTemperature("p_pump_delta", temperatureValue)
 
             hoverEnabled: true
             hoverText: "Minimum temperature delta between release and return temperatures (in favour of release) in order for the pump to be turned on."
@@ -269,7 +278,7 @@ Flickable {
 
             enabled: actuatorsConfigEnabled
 
-            onPositionChanged: console.log("update h1 act")
+            onPositionChanged: heatingControl.changeRelay("heater_1", position == 1)
         }
 
         Switch {
@@ -286,7 +295,7 @@ Flickable {
 
             enabled: actuatorsConfigEnabled
 
-            onPositionChanged: console.log("update h2 act")
+            onPositionChanged: heatingControl.changeRelay("heater_2", position == 1)
         }
 
         Switch {
@@ -303,7 +312,7 @@ Flickable {
 
             enabled: actuatorsConfigEnabled
 
-            onPositionChanged: console.log("update pump act")
+            onPositionChanged: heatingControl.changeRelay("pump", position == 1)
         }
     }
 }

@@ -42,6 +42,7 @@ Item {
     property SequentialAnimation currentAnimation: waveAnimation
 
     onEffectNameChanged: refreshEffect()
+    onEffectColorChanged: refreshEffect()
 
     CustomIcon {
         id: preview

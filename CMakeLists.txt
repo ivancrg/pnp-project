@@ -13,6 +13,9 @@ qt_standard_project_setup()
 qt_add_executable(appprojekt
     qml.qrc
     main.cpp
+    arduinocommunication.h arduinocommunication.cpp
+    ledcontrol.h ledcontrol.cpp
+    heatingcontrol.h heatingcontrol.cpp
 )
 
 qt_add_qml_module(appprojekt
