@@ -18,6 +18,7 @@ Item {
     property bool wrapLabel: false
     property bool hoverEnabled: false
     property string hoverText: "N/A"
+    property bool pressed: temperatureDial.pressed
 
     Text {
         id: temperatureText

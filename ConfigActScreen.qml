@@ -11,16 +11,20 @@ Flickable {
     property real heater1DeltaTemp: 34.5 // Connect to arduino data
     property real heater2DeltaTemp: 23.5 // Connect to arduino data
     property real pumpDeltaTemp: 23.5 // Connect to arduino data
-
     property real dialsLeftMargin: (dialsContainer.width
                                     - roomDial.width
                                     - roomIntervalDial.width
                                     - heater1DeltaDial.width
                                     - heater2DeltaDial.width
                                     - pumpDeltaDial.width) / 4
+
     property bool heater1On: true  // Read from arduino
     property bool heater2On: false  // Read from arduino
     property bool pumpOn: true  // Read from arduino
+    property real switchsLeftMargin: (switchesContainer.width
+                                    - heater1Switch.width
+                                    - heater2Switch.width
+                                    - pumpSwitch.width) / 2
 
     //color: "#100000ff"
 
@@ -28,7 +32,9 @@ Flickable {
     anchors.fill: parent
 
     contentWidth: parent.width
-    contentHeight: 0
+    contentHeight: temperaturesConfigLabel.height
+                   + dialsContainer.height
+                   + heaterPumpLabel.height
                    + 300
 
     ScrollBar.vertical: ScrollBar {
@@ -53,12 +59,10 @@ Flickable {
     }
 
     // Configure temperatures
-    Rectangle {
+    Item {
         id: dialsContainer
         width: parent.width * 3 / 4
         height: childrenRect.height
-
-        color: "#00000000"
 
         anchors {
             top: temperaturesConfigLabel.bottom
@@ -74,7 +78,7 @@ Flickable {
 
             labelText: "Room"
             initialTemperatureValue: roomTemp
-            onTemperatureValueChanged: { console.log("Arduino update room") }
+            onPressedChanged: { if (!pressed) console.log("Arduino update room", temperatureValue) }
 
             hoverEnabled: true
             hoverText: "Wanted room temperature."
@@ -92,7 +96,7 @@ Flickable {
             labelText: "Room Interval"
             dialMinValue: 0; dialMaxValue: 5
             initialTemperatureValue: roomIntervalTemp
-            onTemperatureValueChanged: { console.log("Arduino update room interval") }
+            onPressedChanged: { if (!pressed) console.log("Arduino update room interval", temperatureValue) }
 
             hoverEnabled: true
             hoverText: "Describes maximum deviation from wanted room temperature in order for it to be considered correct."
@@ -112,7 +116,7 @@ Flickable {
             labelText: "Heater 1 Delta"
             dialMinValue: 0; dialMaxValue: 10
             initialTemperatureValue: heater1DeltaTemp
-            onTemperatureValueChanged: { console.log("Arduino update heater1") }
+            onPressedChanged: { if (!pressed) console.log("Arduino update heater1", temperatureValue) }
 
             hoverEnabled: true
             hoverText: "Minimum temperature delta between current and wanted room temperatures (in favour of wanted) in order for Heater 1 to be turned on."
@@ -132,7 +136,7 @@ Flickable {
             labelText: "Heater 2 Delta"
             dialMinValue: 0; dialMaxValue: 10
             initialTemperatureValue: heater2DeltaTemp
-            onTemperatureValueChanged: { console.log("Arduino update heater2") }
+            onPressedChanged: { if (!pressed) console.log("Arduino update heater2", temperatureValue) }
 
             hoverEnabled: true
             hoverText: "Minimum temperature delta between current and wanted room temperatures (in favour of wanted) in order for Heater 2 to be turned on."
@@ -152,7 +156,7 @@ Flickable {
             labelText: "Pump Delta"
             dialMinValue: 0; dialMaxValue: 20
             initialTemperatureValue: pumpDeltaTemp
-            onTemperatureValueChanged: { console.log("Arduino update pump") }
+            onPressedChanged: { if (!pressed) console.log("Arduino update pump", temperatureValue) }
 
             hoverEnabled: true
             hoverText: "Minimum temperature delta between release and return temperatures (in favour of release) in order for the pump to be turned on."
@@ -180,5 +184,60 @@ Flickable {
         }
     }
 
+    Item {
+        id: switchesContainer
+        width: parent.width * 3 / 4
+        height: childrenRect.height
 
+        anchors {
+            top: heaterPumpLabel.bottom
+            horizontalCenter: parent.horizontalCenter
+            topMargin: 32
+            leftMargin: 48
+        }
+
+        Switch {
+            id: heater1Switch
+            text: "Heater 1"
+            font.pixelSize: 22
+            icon.source: "qrc:/icons/water_heater_1.svg"
+
+            anchors {
+                top: parent.top
+                left: parent.left
+            }
+
+            onPositionChanged: console.log("update h1 act")
+        }
+
+        Switch {
+            id: heater2Switch
+            text: "Heater 2"
+            font.pixelSize: 22
+            icon.source: "qrc:/icons/water_heater_2.svg"
+
+            anchors {
+                top: parent.top
+                left: heater1Switch.right
+                leftMargin: switchsLeftMargin
+            }
+
+            onPositionChanged: console.log("update h2 act")
+        }
+
+        Switch {
+            id: pumpSwitch
+            text: "Pump"
+            font.pixelSize: 22
+            icon.source: "qrc:/icons/water_pump.svg"
+
+            anchors {
+                top: parent.top
+                left: heater2Switch.right
+                leftMargin: switchsLeftMargin
+            }
+
+            onPositionChanged: console.log("update pump act")
+        }
+    }
 }
