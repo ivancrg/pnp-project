@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls
 import QtQuick.Controls.Material
+import QtCharts 2.0
 
 Flickable {
     id: root
@@ -16,9 +17,9 @@ Flickable {
     property bool heater2On: false  // Read from arduino
     property bool pumpOn: true  // Read from arduino
     property real statusLeftMargin: (statusContainer.width
-                                    - heater1Status.width
-                                    - heater2Status.width
-                                    - pumpStatus.width) / 2
+                                     - heater1Status.width
+                                     - heater2Status.width
+                                     - pumpStatus.width) / 2
 
     //color: "#100000ff"
 
@@ -27,10 +28,11 @@ Flickable {
 
     contentWidth: parent.width
     contentHeight: temperaturesLabel.height
-                    + dialsContainer.height
-                    + heaterPumpLabel.height
-                    + statusContainer.height
-                    + 250
+                   + dialsContainer.height
+                   + heaterPumpLabel.height
+                   + statusContainer.height
+                   + temperatureHistoryChart.height
+                   + 300
 
     ScrollBar.vertical: ScrollBar {
         parent: root.parent
@@ -208,6 +210,52 @@ Flickable {
 
                 leftMargin: dialsLeftMargin
             }
+        }
+    }
+
+    // Temperature history label
+    Label {
+        id: temperatureHistoryLabel
+        text: "Temperature history"
+        font.pixelSize: 28
+
+        anchors {
+            top: statusContainer.bottom
+            left: parent.left
+            topMargin: 32
+            leftMargin: 32
+        }
+    }
+
+    ChartView {
+        id: temperatureHistoryChart
+        width: parent.width * 3 / 4
+        height: width * 9 / 16
+
+        anchors {
+            top: temperatureHistoryLabel.bottom
+            horizontalCenter: parent.horizontalCenter
+
+            topMargin: 32
+        }
+
+        ValueAxis {
+            id: yAxis
+            min: 0
+            max: 40
+            labelFormat: "%.0f"
+        }
+
+        LineSeries {
+            id: lineSeries1
+            axisY: yAxis
+            name: "Room temperature"
+            width: 3
+            XYPoint { x: 0; y: 22 }
+            XYPoint { x: 1; y: 22.9 }
+            XYPoint { x: 2; y: 23.5 }
+            XYPoint { x: 3; y: 23.9 }
+            XYPoint { x: 4; y: 24.1 }
         }
     }
 }

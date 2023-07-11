@@ -6,8 +6,8 @@ ApplicationWindow {
     readonly property real aspectRatio: width / height
     property bool menuOpened: drawer.position
     property string buttonFontColor: Material.theme === Material.Dark ? "#ffffff" : "#000000"
-    property QtObject activeDrawerItem: ledNavigation
-    property string activeLoaderItem: "CurrentStatusScreen.qml"
+    property QtObject activeDrawerItem: heatingConfigActNavigation
+    property string activeLoaderItem: "ConfigActScreen.qml"
 
     id: window
     width: 1280
@@ -120,7 +120,7 @@ ApplicationWindow {
             }
         }
 
-        Button {
+        /*Button {
             id: heatingActuatorsNavigation
             text: "Actuators"
             font.bold: heatingActuatorsNavigation == activeDrawerItem
@@ -143,12 +143,12 @@ ApplicationWindow {
                 activeDrawerItem = heatingActuatorsNavigation
                 activeLoaderItem = "ActuatorsScreen.qml"
             }
-        }
+        }*/
 
         Button {
-            id: heatingConfigurationNavigation
-            text: "Configuration"
-            font.bold: heatingConfigurationNavigation == activeDrawerItem
+            id: heatingConfigActNavigation
+            text: "Configuration and Actuators"
+            font.bold: heatingConfigActNavigation == activeDrawerItem
 
             icon.color: Material.color(Material.Teal)
             icon.source: "qrc:/icons/tune.svg"
@@ -159,13 +159,13 @@ ApplicationWindow {
             Material.foreground: Material.theme === Material.Dark ? buttonFontColor : Material.foreground
 
             anchors {
-                top: heatingActuatorsNavigation.bottom
+                top: heatingStatusNavigation.bottom
                 left: parent.left
                 leftMargin: 8
             }
 
             onClicked: {
-                activeDrawerItem = heatingConfigurationNavigation
+                activeDrawerItem = heatingConfigActNavigation
                 activeLoaderItem = "ConfigurationScreen.qml"
             }
         }

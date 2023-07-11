@@ -8,7 +8,7 @@ Item {
     property string labelText: "Status"
     property string statusIconSource: "qrc:/icons/question_mark.svg"
     property string statusIconColor: "#ff0000"
-    property bool wrapText: false
+    property bool wrapLabel: false
 
     CustomIcon {
         id: icon

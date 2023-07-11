@@ -5,6 +5,8 @@ import "./ColorInterpolation" as CI
 Item {
     id: root
 
+    property real dialMinValue: 0
+    property real dialMaxValue: 40
     property real initialTemperatureValue: 25.5    // Set with arduino
     property real temperatureValue: Math.round(temperatureDial.value * 10) / 10   // Use for arduino input
     property string labelText: "Dial"
@@ -13,7 +15,9 @@ Item {
     property string colorMinTemp: Material.accentColor
     property string colorMaxTemp: "darkred"
     property real labelTextMargin: 8
-    property bool wrapText: false
+    property bool wrapLabel: false
+    property bool hoverEnabled: false
+    property string hoverText: "N/A"
 
     Text {
         id: temperatureText
@@ -44,8 +48,8 @@ Item {
         width: height
         height: root.height - dialLabel.height - labelTextMargin
 
-        from: 0
-        to: 40
+        from: dialMinValue
+        to: dialMaxValue
         value: initialTemperatureValue
         stepSize: 0.1
         snapMode: Dial.SnapAlways
@@ -73,5 +77,15 @@ Item {
 
             topMargin: labelTextMargin
         }
+
+        HoverHandler {
+            id: hoverHandler
+            acceptedDevices: PointerDevice.AllDevices
+        }
+
+        ToolTip.delay: 1000
+        ToolTip.timeout: 5000
+        ToolTip.visible: hoverHandler.hovered && hoverEnabled
+        ToolTip.text: hoverText
     }
 }

@@ -4,7 +4,7 @@ project(projekt VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Quick)
+find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Widgets Charts)
 
 set(CMAKE_AUTORCC ON)
 
@@ -18,7 +18,7 @@ qt_add_executable(appprojekt
 qt_add_qml_module(appprojekt
     URI projekt
     VERSION 1.0
-    QML_FILES Main.qml Status.qml ColorInterpolation/ColorInterpolation.qml ColorInterpolation/InterpolationStop.qml TemperatureDial.qml EffectPreview.qml EffectColorArea.qml CustomIcon.qml Preset.qml Effect.qml LEDControlScreen.qml CurrentStatusScreen.qml ActuatorsScreen.qml ConfigurationScreen.qml
+    QML_FILES Main.qml Status.qml ColorInterpolation/ColorInterpolation.qml ColorInterpolation/InterpolationStop.qml TemperatureDial.qml EffectPreview.qml EffectColorArea.qml CustomIcon.qml Preset.qml Effect.qml LEDControlScreen.qml CurrentStatusScreen.qml ConfigActScreen.qml
 )
 
 set_target_properties(appprojekt PROPERTIES
@@ -30,7 +30,7 @@ set_target_properties(appprojekt PROPERTIES
 )
 
 target_link_libraries(appprojekt
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick Qt6::Widgets Qt6::Charts
 )
 
 install(TARGETS appprojekt
