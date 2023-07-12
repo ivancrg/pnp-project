@@ -18,7 +18,9 @@ Rectangle {
 
     // signal presetClicked
     property string presetColor: "#000000"
+    property string selectedColor: presetColor
     property string presetEffect: "static"
+    property string selectedEffect: presetEffect
     property string presetEffectIconSource: "qrc:/icons/" + presetEffect + ".svg"
     property real presetWidth: 50
     property real presetHeight: 50
@@ -89,7 +91,7 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.presetEffect = "static"
+                    root.selectedEffect = "static"
                     effectDialog.close()
                 }
             }
@@ -106,7 +108,7 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.presetEffect = "pulse"
+                    root.selectedEffect = "pulse"
                     effectDialog.close()
                 }
             }
@@ -123,7 +125,7 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.presetEffect = "flash"
+                    root.selectedEffect = "flash"
                     effectDialog.close()
                 }
             }
@@ -140,7 +142,7 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.presetEffect = "double_flash"
+                    root.selectedEffect = "double_flash"
                     effectDialog.close()
                 }
             }
@@ -157,7 +159,7 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.presetEffect = "cycle"
+                    root.selectedEffect = "cycle"
                     effectDialog.close()
                 }
             }
@@ -174,7 +176,7 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.presetEffect = "wave"
+                    root.selectedEffect = "wave"
                     effectDialog.close()
                 }
             }
@@ -191,7 +193,7 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.presetEffect = "lightbulb_off"
+                    root.selectedEffect = "lightbulb_off"
                     effectDialog.close()
                 }
             }
@@ -201,8 +203,7 @@ Rectangle {
     ColorDialog {
         id: colorDialog
         selectedColor: presetColor
-        onAccepted: {presetColor = selectedColor
-            console.log(presetColor)}
+        onAccepted: root.selectedColor = selectedColor
     }
 
     MouseArea {

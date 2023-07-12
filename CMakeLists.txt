@@ -4,7 +4,7 @@ project(projekt VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Widgets Charts)
+find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Widgets Charts SerialPort)
 
 set(CMAKE_AUTORCC ON)
 
@@ -33,7 +33,7 @@ set_target_properties(appprojekt PROPERTIES
 )
 
 target_link_libraries(appprojekt
-    PRIVATE Qt6::Quick Qt6::Widgets Qt6::Charts
+    PRIVATE Qt6::Quick Qt6::Widgets Qt6::Charts Qt6::SerialPort
 )
 
 install(TARGETS appprojekt

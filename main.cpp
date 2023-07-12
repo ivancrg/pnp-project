@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<LEDControl> ("LEDControl", 1, 0, "LEDC");
     qmlRegisterType<HeatingControl> ("HeatingControl", 1, 0, "HeatingC");
+    //qmlRegisterType<ArduinoCommunication> ("ArduinoCommunication", 1, 0, "ArduinoCom");
 
     ArduinoCommunication arduinoCommunication;
     LEDControl ledControl;

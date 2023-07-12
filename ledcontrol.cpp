@@ -1,6 +1,7 @@
 
 #include "ledcontrol.h"
 #include<QDebug>
+#include "arduinocommunication.h"
 
 LEDControl::LEDControl(QObject *parent)
     : QObject{parent}
@@ -12,6 +13,7 @@ LEDControl::LEDControl(QObject *parent)
     m_currentColor = "#00ff00";
     m_showCurrentEffect = false;
     m_activePreset = 0;
+    pullArduinoParameters();
 }
 
 QString LEDControl::currentEffect()
@@ -48,7 +50,7 @@ void LEDControl::setCurrentEffect(QString newEffect)
 {
     m_showCurrentEffect = false;
     m_currentEffect = newEffect;
-    updateArduinoParameters();
+    pushArduinoParameters();
     emit currentEffectChanged();
 }
 
@@ -56,21 +58,21 @@ void LEDControl::setCurrentColor(QString newColor)
 {
     m_showCurrentEffect = false;
     m_currentColor = newColor;
-    updateArduinoParameters();
+    pushArduinoParameters();
     emit currentColorChanged();
 }
 
 void LEDControl::setPresetEffects(QVector<QString> newPresetEffects)
 {
     m_presetEffects = newPresetEffects;
-    updateArduinoParameters();
+    pushArduinoParameters();
     emit presetEffectsChanged();
 }
 
 void LEDControl::setPresetColors(QVector<QString> newPresetColors)
 {
     m_presetColors = newPresetColors;
-    updateArduinoParameters();
+    pushArduinoParameters();
     emit presetColorsChanged();
 }
 
@@ -88,24 +90,29 @@ void LEDControl::changePreset(int index, QString effect, QString color)
         emit presetColorsChanged();
     }
 
-    updateArduinoParameters();
+    pushArduinoParameters();
 }
 
 void LEDControl::setShowCurrentEffect(bool show)
 {
     m_showCurrentEffect = show;
-    updateArduinoParameters();
+    pushArduinoParameters();
     emit showCurrentEffectChanged();
 }
 
 void LEDControl::setActivePreset(int index)
 {
     m_activePreset = index;
-    updateArduinoParameters();
+    pushArduinoParameters();
     emit activePresetChanged();
 }
 
-void LEDControl::updateArduinoParameters()
+void LEDControl::pullArduinoParameters()
+{
+    // m_ac.read();
+}
+
+void LEDControl::pushArduinoParameters()
 {
     qDebug() << "activePreset: " << m_activePreset << " showCurrent: " << m_showCurrentEffect << "effect: " << m_currentEffect << ", color: " << m_currentColor;
     qDebug() << "Refresh ALL LED parameeters (send update to Arduino)! TODO!";

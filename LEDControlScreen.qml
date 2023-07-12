@@ -59,8 +59,8 @@ Item {
                 left: parent.left
             }
 
-            onPresetColorChanged: ledControl.changePreset(0, presetEffect, presetColor)
-            onPresetEffectChanged: ledControl.changePreset(0, presetEffect, presetColor)
+            onSelectedEffectChanged: ledControl.changePreset(0, selectedEffect, selectedColor)
+            onSelectedColorChanged: ledControl.changePreset(0, selectedEffect, selectedColor)
             onPresetPressAndHold: {
                 ledControl.setActivePreset(0);
                 ledControl.setShowCurrentEffect(false);
@@ -80,8 +80,8 @@ Item {
                 leftMargin: 8
             }
 
-            onPresetColorChanged: ledControl.changePreset(1, presetEffect, presetColor)
-            onPresetEffectChanged: ledControl.changePreset(1, presetEffect, presetColor)
+            onSelectedEffectChanged: ledControl.changePreset(1, selectedEffect, selectedColor)
+            onSelectedColorChanged: ledControl.changePreset(1, selectedEffect, selectedColor)
             onPresetPressAndHold: {
                 ledControl.setActivePreset(1);
                 ledControl.setShowCurrentEffect(false);
@@ -101,8 +101,8 @@ Item {
                 leftMargin: 8
             }
 
-            onPresetColorChanged: ledControl.changePreset(2, presetEffect, presetColor)
-            onPresetEffectChanged: ledControl.changePreset(2, presetEffect, presetColor)
+            onSelectedEffectChanged: ledControl.changePreset(2, selectedEffect, selectedColor)
+            onSelectedColorChanged: ledControl.changePreset(2, selectedEffect, selectedColor)
             onPresetPressAndHold: {
                 ledControl.setActivePreset(2);
                 ledControl.setShowCurrentEffect(false);
@@ -122,8 +122,8 @@ Item {
                 leftMargin: 8
             }
 
-            onPresetColorChanged: ledControl.changePreset(3, presetEffect, presetColor)
-            onPresetEffectChanged: ledControl.changePreset(3, presetEffect, presetColor)
+            onSelectedEffectChanged: ledControl.changePreset(3, selectedEffect, selectedColor)
+            onSelectedColorChanged: ledControl.changePreset(3, selectedEffect, selectedColor)
             onPresetPressAndHold: {
                 ledControl.setActivePreset(3);
                 ledControl.setShowCurrentEffect(false);
@@ -143,8 +143,8 @@ Item {
                 leftMargin: 8
             }
 
-            onPresetColorChanged: ledControl.changePreset(4, presetEffect, presetColor)
-            onPresetEffectChanged: ledControl.changePreset(4, presetEffect, presetColor)
+            onSelectedEffectChanged: ledControl.changePreset(4, selectedEffect, selectedColor)
+            onSelectedColorChanged: ledControl.changePreset(4, selectedEffect, selectedColor)
             onPresetPressAndHold: {
                 ledControl.setActivePreset(4);
                 ledControl.setShowCurrentEffect(false);
@@ -164,8 +164,8 @@ Item {
                 leftMargin: 8
             }
 
-            onPresetColorChanged: ledControl.changePreset(5, presetEffect, presetColor)
-            onPresetEffectChanged: ledControl.changePreset(5, presetEffect, presetColor)
+            onSelectedEffectChanged: ledControl.changePreset(5, selectedEffect, selectedColor)
+            onSelectedColorChanged: ledControl.changePreset(5, selectedEffect, selectedColor)
             onPresetPressAndHold: {
                 ledControl.setActivePreset(5);
                 ledControl.setShowCurrentEffect(false);

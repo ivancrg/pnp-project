@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
+//import ArduinoCommunication
 
 ApplicationWindow {
     readonly property real aspectRatio: width / height
@@ -17,7 +18,10 @@ ApplicationWindow {
     Material.theme: Material.System
     Material.accent: Material.Teal
 
+    property bool light: false
+
     Button {
+        id: menuButton
         z: 1
 
         icon.color: Material.color(Material.Teal)
@@ -35,6 +39,102 @@ ApplicationWindow {
 
         onClicked: drawer.open()
     }
+
+//    ArduinoCom { id: arduinoComm }
+
+    ComboBox {
+        id: comPortCombo
+        height: menuButton.height - 8
+        model: ArduinoComm.availablePortsNames
+
+        anchors {
+            right: menuButton.left
+            verticalCenter: menuButton.verticalCenter
+
+            rightMargin: 16
+        }
+
+        onActivated: ArduinoComm.setSelectedPort(currentValue)
+    }
+
+    Label {
+        id: availablePortsLabel
+        text: "Available ports:"
+        font.pixelSize: 12
+
+        anchors {
+            right: comPortCombo.left
+            verticalCenter: comPortCombo.verticalCenter
+
+            rightMargin: 4
+        }
+    }
+
+    Button {
+        id: refreshPorts
+        text: "Refresh COMs"
+        font.pixelSize: 12
+
+        icon.color: Material.color(Material.Teal)
+        icon.source: "qrc:/icons/refresh.svg"
+
+        // Hiding background shading
+        highlighted: true
+        Material.accent: "#00ffffff"
+        Material.foreground: buttonFontColor
+
+        anchors {
+            left: currentPort.right
+            verticalCenter: comPortCombo.verticalCenter
+
+            leftMargin: 4
+        }
+
+        onClicked: ArduinoComm.refreshAvailablePorts()
+    }
+
+    Button {
+        id: test
+        text: "Test"
+        font.pixelSize: 12
+
+        icon.color: Material.color(Material.Teal)
+        icon.source: "qrc:/icons/refresh.svg"
+
+        // Hiding background shading
+        highlighted: true
+        Material.accent: "#00ffffff"
+        Material.foreground: buttonFontColor
+
+        anchors {
+            left: refreshPorts.right
+            verticalCenter: comPortCombo.verticalCenter
+
+            leftMargin: 32
+        }
+
+        onClicked: {
+            ArduinoComm.write(light ? "1" : 0);
+            light = !light;
+        }
+    }
+
+    Label {
+        id: currentPort
+        text: "Selected port: "
+                + (ArduinoComm.selectedPort !== "" ? ArduinoComm.selectedPort : "N/A")
+        font.pixelSize: 12
+        color: ArduinoComm.selectedPort == "" ? "darkred" : Material.primaryTextColor
+
+        anchors {
+            left: parent.left
+            verticalCenter: refreshPorts.verticalCenter
+
+            leftMargin: 32
+        }
+    }
+
+    Component.onCompleted: console.log(ArduinoComm.read())
 
     Drawer {
         id: drawer
@@ -177,7 +277,16 @@ ApplicationWindow {
 
     Loader {
         id: content
-        anchors.fill: parent
+        anchors {
+            top: menuButton.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+
+            topMargin: 4
+        }
+
         source: activeLoaderItem
+        clip: true
     }
 }
