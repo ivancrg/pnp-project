@@ -4,6 +4,8 @@ import QtQuick.Controls.Material
 //import ArduinoCommunication
 
 ApplicationWindow {
+    title: "LHManager"
+
     readonly property real aspectRatio: width / height
     property bool menuOpened: drawer.position
     property string buttonFontColor: Material.theme === Material.Dark ? "#ffffff" : "#000000"
@@ -280,8 +282,6 @@ ApplicationWindow {
             left: parent.left
             right: parent.right
             bottom: parent.bottom
-
-            topMargin: 4
         }
 
         source: activeLoaderItem

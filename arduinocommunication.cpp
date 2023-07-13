@@ -42,10 +42,19 @@ QString ArduinoCommunication::read()
 
     qDebug() << "Reading from Arduino...";
     char transmission[10000];
-    m_arduino->readLine(transmission, 10000);
+    //while(!m_arduino->canReadLine());
+    m_arduino->readLine(transmission, sizeof(transmission));
+
 
     QString data = QString(transmission);
-    qDebug() << data;
+
+//    if(data.trimmed().isEmpty()){
+//        char transmission[10000];
+//        m_arduino->readLine(transmission, sizeof(transmission));
+//        data = QString(transmission);
+//    }
+
+    qDebug() << "READ DATA: " << data;
 
     ((LEDControl *) m_ledControl)->processVariable(data);
     ((HeatingControl *) m_heatingControl)->processVariable(data);

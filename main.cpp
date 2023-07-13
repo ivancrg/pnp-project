@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QFontDatabase>
 #include <QQmlContext>
+#include <QIcon>
 
 #include "arduinocommunication.h"
 #include "ledcontrol.h"
@@ -14,7 +15,7 @@ int main(int argc, char *argv[])
     QFontDatabase::addApplicationFont(":/fonts/materialdesignicons-webfont.ttf");
 
     //qmlRegisterType<LEDControl> ("LEDControl", 1, 0, "LEDC");
-    qmlRegisterType<HeatingControl> ("HeatingControl", 1, 0, "HeatingC");
+    //qmlRegisterType<HeatingControl> ("HeatingControl", 1, 0, "HeatingC");
     //qmlRegisterType<ArduinoCommunication> ("ArduinoCommunication", 1, 0, "ArduinoCom");
 
     ArduinoCommunication arduinoCommunication;
@@ -29,15 +30,19 @@ int main(int argc, char *argv[])
     QQmlContext *rootContext = engine.rootContext();
     rootContext->setContextProperty("ArduinoComm", &arduinoCommunication);
     rootContext->setContextProperty("LEDC", &ledControl);
-    //rootContext->setContextProperty("HeatingC", &heatingControl);
+    rootContext->setContextProperty("HeatingC", &heatingControl);
 
     ledControl.setAc(&arduinoCommunication);
+    heatingControl.setAc(&arduinoCommunication);
     arduinoCommunication.setLedControl(&ledControl);
+    arduinoCommunication.setHeatingControl(&heatingControl);
 
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
         &app, []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
     engine.load(url);
+
+//    app.setWindowIcon(QIcon("./icons/c.svg"));
 
     return app.exec();
 }

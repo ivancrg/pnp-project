@@ -41,11 +41,16 @@ public slots:
     void setShowCurrentEffect(bool);
     void setActivePreset(int);
     void pullArduinoParameters();
-    void pushArduinoParameters();
     void setAc(ArduinoCommunication *);
     void processVariable(QString);
     void processSimpleVariable(QString, QString);
     void processArrayVariable(QString, QString);
+    void updateCurrentEffect(QString newEffect);
+    void updateCurrentColor(QString newColor);
+    void updatePresetEffects(QVector<QString> newPresetEffects);
+    void updatePresetColors(QVector<QString> newPresetColors);
+    void updateShowCurrentEffect(bool show);
+    void updateActivePreset(int index);
 
 private slots:
 

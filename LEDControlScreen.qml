@@ -20,6 +20,25 @@ Item {
 
     onActivePortChanged: LEDC.pullArduinoParameters()
 
+    Button {
+        id: refreshDataButton
+
+        icon.color: Material.color(Material.Teal)
+        icon.source: "qrc:/icons/refresh.svg"
+
+        // Hiding background shading
+        highlighted: true
+        Material.accent: "#00ffffff"
+        Material.foreground: buttonFontColor
+
+        anchors {
+            right: parent.right
+            top: parent.top
+        }
+
+        onClicked: LEDC.pullArduinoParameters()
+    }
+
 //    LEDC { id: ledControl }
 
     // Presets label
@@ -31,7 +50,6 @@ Item {
         anchors {
             top: parent.top
             left: parent.left
-            topMargin: 48
             leftMargin: 32
         }
     }
@@ -65,8 +83,8 @@ Item {
             onSelectedEffectChanged: LEDC.changePreset(0, selectedEffect, selectedColor)
             onSelectedColorChanged: LEDC.changePreset(0, selectedEffect, selectedColor)
             onPresetPressAndHold: {
-                LEDC.setActivePreset(0);
-                LEDC.setShowCurrentEffect(false);
+                LEDC.updateActivePreset(0);
+                LEDC.updateShowCurrentEffect(false);
             }
         }
 
@@ -86,8 +104,8 @@ Item {
             onSelectedEffectChanged: LEDC.changePreset(1, selectedEffect, selectedColor)
             onSelectedColorChanged: LEDC.changePreset(1, selectedEffect, selectedColor)
             onPresetPressAndHold: {
-                LEDC.setActivePreset(1);
-                LEDC.setShowCurrentEffect(false);
+                LEDC.updateActivePreset(1);
+                LEDC.updateShowCurrentEffect(false);
             }
         }
 
@@ -107,8 +125,8 @@ Item {
             onSelectedEffectChanged: LEDC.changePreset(2, selectedEffect, selectedColor)
             onSelectedColorChanged: LEDC.changePreset(2, selectedEffect, selectedColor)
             onPresetPressAndHold: {
-                LEDC.setActivePreset(2);
-                LEDC.setShowCurrentEffect(false);
+                LEDC.updateActivePreset(2);
+                LEDC.updateShowCurrentEffect(false);
             }
         }
 
@@ -128,8 +146,8 @@ Item {
             onSelectedEffectChanged: LEDC.changePreset(3, selectedEffect, selectedColor)
             onSelectedColorChanged: LEDC.changePreset(3, selectedEffect, selectedColor)
             onPresetPressAndHold: {
-                LEDC.setActivePreset(3);
-                LEDC.setShowCurrentEffect(false);
+                LEDC.updateActivePreset(3);
+                LEDC.updateShowCurrentEffect(false);
             }
         }
 
@@ -149,8 +167,8 @@ Item {
             onSelectedEffectChanged: LEDC.changePreset(4, selectedEffect, selectedColor)
             onSelectedColorChanged: LEDC.changePreset(4, selectedEffect, selectedColor)
             onPresetPressAndHold: {
-                LEDC.setActivePreset(4);
-                LEDC.setShowCurrentEffect(false);
+                LEDC.updateActivePreset(4);
+                LEDC.updateShowCurrentEffect(false);
             }
         }
 
@@ -170,8 +188,8 @@ Item {
             onSelectedEffectChanged: LEDC.changePreset(5, selectedEffect, selectedColor)
             onSelectedColorChanged: LEDC.changePreset(5, selectedEffect, selectedColor)
             onPresetPressAndHold: {
-                LEDC.setActivePreset(5);
-                LEDC.setShowCurrentEffect(false);
+                LEDC.updateActivePreset(5);
+                LEDC.updateShowCurrentEffect(false);
             }
         }
     }
@@ -218,7 +236,7 @@ Item {
                 left: parent.left
             }
 
-            onEffectClicked: LEDC.setCurrentEffect("s")
+            onEffectClicked: LEDC.updateCurrentEffect("s")
         }
 
         Effect {
@@ -236,7 +254,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: LEDC.setCurrentEffect("p")
+            onEffectClicked: LEDC.updateCurrentEffect("p")
         }
 
         Effect {
@@ -254,7 +272,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: LEDC.setCurrentEffect("f")
+            onEffectClicked: LEDC.updateCurrentEffect("f")
         }
 
         Effect {
@@ -272,7 +290,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: LEDC.setCurrentEffect("df")
+            onEffectClicked: LEDC.updateCurrentEffect("df")
         }
 
         Effect {
@@ -290,7 +308,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: LEDC.setCurrentEffect("c")
+            onEffectClicked: LEDC.updateCurrentEffect("c")
         }
 
         Effect {
@@ -308,7 +326,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: LEDC.setCurrentEffect("w")
+            onEffectClicked: LEDC.updateCurrentEffect("w")
         }
 
         Effect {
@@ -326,7 +344,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: LEDC.setCurrentEffect("o")
+            onEffectClicked: LEDC.updateCurrentEffect("o")
         }
     }
 
@@ -342,7 +360,7 @@ Item {
             topMargin: 12
         }
 
-        onActiveColorChanged: activeColor !== LEDC.currentColor ? LEDC.setCurrentColor(activeColor) : 0
+        onActiveColorChanged: activeColor !== LEDC.currentColor ? LEDC.updateCurrentColor(activeColor) : 0
 
         visible: activeEffectName !== "c" && activeEffectName !== "o"
     }
@@ -380,6 +398,6 @@ Item {
             topMargin: 24
         }
 
-        onClicked: LEDC.setShowCurrentEffect(true);
+        onClicked: LEDC.updateShowCurrentEffect(true);
     }
 }

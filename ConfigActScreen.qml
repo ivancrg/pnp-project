@@ -2,18 +2,18 @@ import QtQuick 2.0
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtCharts 2.0
-import HeatingControl
+//import HeatingControl
 
 Flickable {
     id: root
 
-    HeatingC { id: heatingControl }
+//    HeatingC { id: heatingControl }
 
-    property real roomTemp: heatingControl.temperatures["p_room"]
-    property real roomIntervalTemp: heatingControl.temperatures["p_room_int"]
-    property real heater1DeltaTemp: heatingControl.temperatures["p_heater_1_delta"]
-    property real heater2DeltaTemp: heatingControl.temperatures["p_heater_2_delta"]
-    property real pumpDeltaTemp: heatingControl.temperatures["p_pump_delta"]
+    property real roomTemp: HeatingC.temperatures["p_room"]
+    property real roomIntervalTemp: HeatingC.temperatures["p_room_int"]
+    property real heater1DeltaTemp: HeatingC.temperatures["p_heater_1_delta"]
+    property real heater2DeltaTemp: HeatingC.temperatures["p_heater_2_delta"]
+    property real pumpDeltaTemp: HeatingC.temperatures["p_pump_delta"]
     property real dialsLeftMargin: (dialsContainer.width
                                     - roomDial.width
                                     - roomIntervalDial.width
@@ -21,16 +21,16 @@ Flickable {
                                     - heater2DeltaDial.width
                                     - pumpDeltaDial.width) / 4
 
-    property bool heater1On: heatingControl.relays["heater_1"]
-    property bool heater2On: heatingControl.relays["heater_2"]
-    property bool pumpOn: heatingControl.relays["pump"]
+    property bool heater1On: HeatingC.relays["heater_1"]
+    property bool heater2On: HeatingC.relays["heater_2"]
+    property bool pumpOn: HeatingC.relays["pump"]
     property real switchsLeftMargin: (switchesContainer.width
                                     - heater1Switch.width
                                     - heater2Switch.width
                                     - pumpSwitch.width) / 2
 
 
-    property string currentActiveMode: heatingControl.heatingMode
+    property string currentActiveMode: HeatingC.heatingMode
     property string customModeName: "custom_mode"
     property string rapidModeName: "rapid_mode"
     property string autoModeName: "auto_mode"
@@ -39,7 +39,17 @@ Flickable {
     property bool actuatorsConfigVisible: currentActiveMode == customModeName || currentActiveMode == rapidModeName
     property bool actuatorsConfigEnabled: currentActiveMode !== rapidModeName
 
+    property string buttonFontColor: Material.theme === Material.Dark ? "#ffffff" : "#000000"
+
+    property string activePort: ArduinoComm.selectedPort
+
+    onActivePortChanged: HeatingC.pullArduinoParameters()
+
+    onCurrentActiveModeChanged: console.log("ACTIVE MODE CHANGE", currentActiveMode)
+
     Component.onCompleted: {
+        onActivePortChanged: HeatingC.pullArduinoParameters()
+
         if (currentActiveMode == rapidModeName) {
             heater1Switch.position = 1;
             heater2Switch.position = 1;
@@ -61,6 +71,25 @@ Flickable {
         anchors.top: root.top
         anchors.left: root.right
         anchors.bottom: root.bottom
+    }    
+
+    Button {
+        id: refreshDataButton
+
+        icon.color: Material.color(Material.Teal)
+        icon.source: "qrc:/icons/refresh.svg"
+
+        // Hiding background shading
+        highlighted: true
+        Material.accent: "#00ffffff"
+        Material.foreground: buttonFontColor
+
+        anchors {
+            right: parent.right
+            top: parent.top
+        }
+
+        onClicked: HeatingC.pullArduinoParameters()
     }
 
     // Mode selection label
@@ -72,7 +101,6 @@ Flickable {
         anchors {
             top: parent.top
             left: parent.left
-            topMargin: 48
             leftMargin: 32
         }
     }
@@ -84,14 +112,14 @@ Flickable {
         height: 35
         activeMode: currentActiveMode
         onActiveModeChanged: {
-            heatingControl.setHeatingMode(activeMode)
+            HeatingC.updateHeatingMode(activeMode)
         }
 
         onCustomModeClicked: {
             heater1Switch.position = heater2Switch.position = pumpSwitch.position = 0;
-            heatingControl.changeRelay("heater_1", false);
-            heatingControl.changeRelay("heater_2", false);
-            heatingControl.changeRelay("pump", false);
+            HeatingC.updateRelay("heater_1", false);
+            HeatingC.updateRelay("heater_2", false);
+            HeatingC.updateRelay("pump", false);
         }
 
         onRapidModeClicked: {
@@ -145,7 +173,7 @@ Flickable {
 
             labelText: "Room"
             initialTemperatureValue: roomTemp
-            onPressedChanged: if (!pressed) heatingControl.changeTemperature("p_room", temperatureValue)
+            onPressedChanged: if (!pressed) HeatingC.updateTemperature("p_room", temperatureValue)
 
             hoverEnabled: true
             hoverText: "Wanted room temperature."
@@ -163,7 +191,7 @@ Flickable {
             labelText: "Room Interval"
             dialMinValue: 0; dialMaxValue: 5
             initialTemperatureValue: roomIntervalTemp
-            onPressedChanged: if (!pressed) heatingControl.changeTemperature("p_room_int", temperatureValue)
+            onPressedChanged: if (!pressed) HeatingC.updateTemperature("p_room_int", temperatureValue)
 
             hoverEnabled: true
             hoverText: "Describes maximum deviation from wanted room temperature in order for it to be considered correct."
@@ -183,7 +211,7 @@ Flickable {
             labelText: "Heater 1 Delta"
             dialMinValue: 0; dialMaxValue: 10
             initialTemperatureValue: heater1DeltaTemp
-            onPressedChanged: if (!pressed) heatingControl.changeTemperature("p_heater_1_delta", temperatureValue)
+            onPressedChanged: if (!pressed) HeatingC.updateTemperature("p_heater_1_delta", temperatureValue)
 
             hoverEnabled: true
             hoverText: "Minimum temperature delta between current and wanted room temperatures (in favour of wanted) in order for Heater 1 to be turned on."
@@ -203,7 +231,7 @@ Flickable {
             labelText: "Heater 2 Delta"
             dialMinValue: 0; dialMaxValue: 10
             initialTemperatureValue: heater2DeltaTemp
-            onPressedChanged: if (!pressed) heatingControl.changeTemperature("p_heater_2_delta", temperatureValue)
+            onPressedChanged: if (!pressed) HeatingC.updateTemperature("p_heater_2_delta", temperatureValue)
 
             hoverEnabled: true
             hoverText: "Minimum temperature delta between current and wanted room temperatures (in favour of wanted) in order for Heater 2 to be turned on."
@@ -223,7 +251,7 @@ Flickable {
             labelText: "Pump Delta"
             dialMinValue: 0; dialMaxValue: 20
             initialTemperatureValue: pumpDeltaTemp
-            onPressedChanged: if (!pressed) heatingControl.changeTemperature("p_pump_delta", temperatureValue)
+            onPressedChanged: if (!pressed) HeatingC.updateTemperature("p_pump_delta", temperatureValue)
 
             hoverEnabled: true
             hoverText: "Minimum temperature delta between release and return temperatures (in favour of release) in order for the pump to be turned on."
@@ -278,7 +306,7 @@ Flickable {
 
             enabled: actuatorsConfigEnabled
 
-            onPositionChanged: heatingControl.changeRelay("heater_1", position == 1)
+            onPositionChanged: HeatingC.updateRelay("heater_1", position == 1)
         }
 
         Switch {
@@ -295,7 +323,7 @@ Flickable {
 
             enabled: actuatorsConfigEnabled
 
-            onPositionChanged: heatingControl.changeRelay("heater_2", position == 1)
+            onPositionChanged: HeatingC.updateRelay("heater_2", position == 1)
         }
 
         Switch {
@@ -312,7 +340,7 @@ Flickable {
 
             enabled: actuatorsConfigEnabled
 
-            onPositionChanged: heatingControl.changeRelay("pump", position == 1)
+            onPositionChanged: HeatingC.updateRelay("pump", position == 1)
         }
     }
 }

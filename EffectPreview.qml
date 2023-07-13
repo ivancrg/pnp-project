@@ -10,34 +10,34 @@ Item {
         preview.opacity = 1;
 
         switch (effectName) {
-        case "pulse":
+        case "p":
             currentAnimation = pulseAnimation;
             break;
-        case "flash":
+        case "f":
             currentAnimation = flashAnimation;
             break;
-        case "double_flash":
+        case "df":
             currentAnimation = doubleFlashAnimation;
             break;
-        case "cycle":
+        case "c":
             currentAnimation = cycleAnimation;
             break;
-        case "wave":
+        case "w":
             currentAnimation = waveAnimation;
             break;
-        case "off":
+        case "o":
             preview.opacity = 0;
             break;
         }
 
-        if (effectName !== "static" && effectName !== "off") {
+        if (effectName !== "s" && effectName !== "o") {
             currentAnimation.start()
         }
     }
 
     id: root
 
-    property string effectName: "static"
+    property string effectName: "s"
     property string effectColor: "#000000"
     property SequentialAnimation currentAnimation: waveAnimation
 

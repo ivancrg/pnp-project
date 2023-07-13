@@ -46,131 +46,119 @@ int LEDControl::activePreset()
     return m_activePreset;
 }
 
-void LEDControl::setCurrentEffect(QString newEffect)
+void LEDControl::updateCurrentEffect(QString newEffect)
 {
-//    m_showCurrentEffect = false;
-//    m_currentEffect = newEffect;
-//    pushArduinoParameters();
-
-    if (newEffect == m_currentEffect)
+   if (newEffect == m_currentEffect)
         return;
 
-    setShowCurrentEffect(false);
+    updateShowCurrentEffect(false);
     QThread::msleep(100);
     m_ac->setVariable("current_effect", newEffect);
+}
 
+void LEDControl::setCurrentEffect(QString newEffect)
+{
+    m_currentEffect = newEffect;
     emit currentEffectChanged();
+}
+
+void LEDControl::updateCurrentColor(QString newColor)
+{
+    if (newColor == m_currentColor)
+        return;
+
+    updateShowCurrentEffect(false);
+    QThread::msleep(100);
+    m_ac->setVariable("current_color", newColor);
 }
 
 void LEDControl::setCurrentColor(QString newColor)
 {
-//    m_showCurrentEffect = false;
-//    m_currentColor = newColor;
-//    pushArduinoParameters();
-
-    if (newColor == m_currentColor)
-        return;
-
-    setShowCurrentEffect(false);
-    QThread::msleep(100);
-    m_ac->setVariable("current_color", newColor);
-
+    m_currentColor = newColor;
     emit currentColorChanged();
 }
 
-void LEDControl::setPresetEffects(QVector<QString> newPresetEffects)
+void LEDControl::updatePresetEffects(QVector<QString> newPresetEffects)
 {
-//    m_presetEffects = newPresetEffects;
-//    pushArduinoParameters();
-
     QStringList stringList;
     for (const QString& element : newPresetEffects)
         stringList.append(element);
 
     m_ac->setVariable("preset_effects", stringList.join(","));
+}
+
+void LEDControl::setPresetEffects(QVector<QString> newPresetEffects)
+{
+    m_presetEffects = newPresetEffects;
     emit presetEffectsChanged();
 }
 
-void LEDControl::setPresetColors(QVector<QString> newPresetColors)
+void LEDControl::updatePresetColors(QVector<QString> newPresetColors)
 {
-//    m_presetColors = newPresetColors;
-//    pushArduinoParameters();
     QStringList stringList;
     for (const QString& element : newPresetColors)
         stringList.append(element);
 
     m_ac->setVariable("preset_colors", stringList.join(","));
+}
+
+void LEDControl::setPresetColors(QVector<QString> newPresetColors)
+{
+    m_presetColors = newPresetColors;
     emit presetColorsChanged();
 }
 
 void LEDControl::changePreset(int index, QString effect, QString color)
 {
-//    if (index >= 0 && index < m_presetEffects.size())
-//    {
-//        m_presetEffects[index] = effect;
-//        emit presetEffectsChanged();
-//    }
+    if (effect != m_presetEffects[index]){
+        QVector<QString> newEffects(m_presetEffects);
+        newEffects[index] = effect;
+        updatePresetEffects(newEffects);
+    }
 
-//    if (index >= 0 && index < m_presetColors.size())
-//    {
-//        m_presetColors[index] = color;
-//        emit presetColorsChanged();
-//    }
-
-    if (effect == m_presetEffects[index] && color == m_presetColors[index])
-        return;
-
-    QVector<QString> newEffects(m_presetEffects);
-    newEffects[index] = effect;
-
-    QVector<QString> newColors(m_presetColors);
-    newColors[index] = color;
-
-    setPresetEffects(newEffects);
-    setPresetColors(newColors);
+    if (color != m_presetColors[index]){
+        QVector<QString> newColors(m_presetColors);
+        newColors[index] = color;
+        updatePresetColors(newColors);
+    }
 }
 
-void LEDControl::setShowCurrentEffect(bool show)
+void LEDControl::updateShowCurrentEffect(bool show)
 {
-//    m_showCurrentEffect = show;
-//    pushArduinoParameters();
-
     if (m_showCurrentEffect == show)
         return;
 
     m_ac->setVariable("show_current_effect", show ? "true" : "false");
+}
 
+void LEDControl::setShowCurrentEffect(bool show)
+{
+    m_showCurrentEffect = show;
     emit showCurrentEffectChanged();
 }
 
-void LEDControl::setActivePreset(int index)
+void LEDControl::updateActivePreset(int index)
 {
-//    m_activePreset = index;
-//    pushArduinoParameters();
-
     if (m_activePreset == index)
         return;
 
     m_ac->setVariable("active_preset", QString::number(index));
+}
 
+void LEDControl::setActivePreset(int index)
+{
+    m_activePreset = index;
     emit activePresetChanged();
 }
 
 void LEDControl::pullArduinoParameters()
 {
-    qDebug() << "isnull m_ac " << !m_ac;
     if (!m_ac){
         qDebug() << "Arduino communication failed.";
         return;
     }
 
     m_ac->getVariable("all");
-}
-
-void LEDControl::pushArduinoParameters()
-{
-    qDebug() << "activePreset: " << m_activePreset << " showCurrent: " << m_showCurrentEffect << "effect: " << m_currentEffect << ", color: " << m_currentColor;
-    qDebug() << "Refresh ALL LED parameeters (send update to Arduino)! TODO!";
 }
 
 void LEDControl::setAc(ArduinoCommunication *ac)
@@ -199,31 +187,25 @@ void LEDControl::processVariable(QString data)
 void LEDControl::processSimpleVariable(QString id, QString value){
     qDebug() << "LEDC to process simple data, " << id << ":" << value;
     if (id == "current_effect") {
-        m_currentEffect = value;
-        emit currentEffectChanged();
+        setCurrentEffect(value);
     } else if (id == "current_color") {
-        m_currentColor = value;
-        emit currentColorChanged();
+        setCurrentColor(value);
     } else if (id == "show_current_effect") {
-        m_showCurrentEffect = (value == "true");
-        emit showCurrentEffectChanged();
+        setShowCurrentEffect(value == "true");
     } else if (id == "active_preset") {
-        m_activePreset = value.toInt();
-        emit activePresetChanged();
+        setActivePreset(value.toInt());
     }
 }
 
 void LEDControl::processArrayVariable(QString id, QString value) {
-    qDebug() << "LEDC to process simple data, " << id << ":" << value.split(",");
+    qDebug() << "LEDC to process complex data, " << id << ":" << value.split(",");
     QStringList list = value.split(",");
 
     if (id == "preset_effects") {
         QVector<QString> newEffects(list.begin(), list.end());
-        m_presetEffects = newEffects;
-        emit presetEffectsChanged();
+        setPresetEffects(newEffects);
     } else if (id == "preset_colors") {
         QVector<QString> newColors(list.begin(), list.end());
-        m_presetColors = newColors;
-        emit presetColorsChanged();
+        setPresetColors(newColors);
     }
 }

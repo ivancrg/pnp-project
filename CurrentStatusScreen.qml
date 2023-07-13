@@ -2,36 +2,40 @@ import QtQuick 2.0
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtCharts 2.0
-import HeatingControl
+//import HeatingControl
 
 Flickable {
     id: root
 
-    HeatingC { id: heatingControl }
+//    HeatingC { id: heatingControl }
 
-    property real roomTemp: heatingControl.temperatures["room"]
-    property real releaseTemp: heatingControl.temperatures["release"]
-    property real returnTemp: heatingControl.temperatures["return"]
+    property real roomTemp: HeatingC.temperatures["room"]
+    property real releaseTemp: HeatingC.temperatures["release"]
+    property real returnTemp: HeatingC.temperatures["return"]
     property real dialsLeftMargin: (dialsContainer.width
                                     - roomTempDial.width
                                     - releaseTempDial.width
                                     - returnTempDial.width) / 2
 
-    property bool heater1On: heatingControl.relays["heater_1"]
-    property bool heater2On: heatingControl.relays["heater_2"]
-    property bool pumpOn: heatingControl.relays["pump"]
+    property bool heater1On: HeatingC.relays["heater_1"]
+    property bool heater2On: HeatingC.relays["heater_2"]
+    property bool pumpOn: HeatingC.relays["pump"]
     property real statusLeftMargin: (statusContainer.width
                                      - heater1Status.width
                                      - heater2Status.width
                                      - pumpStatus.width) / 2
+    property string activePort: ArduinoComm.selectedPort
 
+    property string buttonFontColor: Material.theme === Material.Dark ? "#ffffff" : "#000000"
+
+    onActivePortChanged: HeatingC.pullArduinoParameters()
 
     Component.onCompleted: {
-        for (var i = 0; i < heatingControl.temperatureHistory.length; ++i)
-            temperatureHistorySeries.append(i, heatingControl.temperatureHistory[i])
+        for (var i = 0; i < HeatingC.temperatureHistory.length; ++i)
+            temperatureHistorySeries.append(i, HeatingC.temperatureHistory[i])
 
-        for (let i = 0; i < heatingControl.consumptionHistory.length; ++i)
-            consumptionHistorySeries.append(i, heatingControl.consumptionHistory[i])
+        for (let i = 0; i < HeatingC.consumptionHistory.length; ++i)
+            consumptionHistorySeries.append(i, HeatingC.consumptionHistory[i])
     }
 
     clip: true
@@ -55,6 +59,25 @@ Flickable {
         anchors.bottom: root.bottom
     }
 
+    Button {
+        id: refreshDataButton
+
+        icon.color: Material.color(Material.Teal)
+        icon.source: "qrc:/icons/refresh.svg"
+
+        // Hiding background shading
+        highlighted: true
+        Material.accent: "#00ffffff"
+        Material.foreground: buttonFontColor
+
+        anchors {
+            right: parent.right
+            top: parent.top
+        }
+
+        onClicked: HeatingC.pullArduinoParameters()
+    }
+
     // Current temperatures label
     Label {
         id: temperaturesLabel
@@ -64,7 +87,6 @@ Flickable {
         anchors {
             top: parent.top
             left: parent.left
-            topMargin: 48
             leftMargin: 32
         }
     }
@@ -258,14 +280,14 @@ Flickable {
             ValueAxis{
                 id: xAxisTemperatureHistory
                 min: 0
-                max: heatingControl.temperatureHistory.length
+                max: HeatingC.temperatureHistory.length
                 labelFormat: "%.0f"
                 titleText: "Time [period]"
             },
             ValueAxis{
                 id: yAxisTemperatureHistory
-                min: Math.min(...heatingControl.temperatureHistory) - 5
-                max: Math.max(...heatingControl.temperatureHistory) + 5
+                min: Math.min(...HeatingC.temperatureHistory) - 5
+                max: Math.max(...HeatingC.temperatureHistory) + 5
                 labelFormat: "%.0f"
                 titleText: "Temperature [°C]"
             }
@@ -310,14 +332,14 @@ Flickable {
             ValueAxis{
                 id: xAxisConsumptionHistory
                 min: 0
-                max: heatingControl.consumptionHistory.length
+                max: HeatingC.consumptionHistory.length
                 labelFormat: "%.0f"
                 titleText: "Time [period]"
             },
             ValueAxis{
                 id: yAxisConsumptionHistory
-                min: Math.min(...heatingControl.consumptionHistory) - 200
-                max: Math.max(...heatingControl.consumptionHistory) + 200
+                min: Math.min(...HeatingC.consumptionHistory) - 200
+                max: Math.max(...HeatingC.consumptionHistory) + 200
                 labelFormat: "%.0f"
                 titleText: "Power [W]"
             }
