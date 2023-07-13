@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
-import LEDControl
+//import LEDControl
 
 Item {
     property real effectsHorizontalMargin: (width
@@ -13,11 +13,14 @@ Item {
                                             - waveEffect.width
                                             - offEffect.width
                                             - 48) / 7
-    property string activeEffectName: ledControl.currentEffect;
-    property string activeEffectColor: ledControl.currentColor;
-    property string buttonFontColor: Material.theme === Material.Dark ? "#ffffff" : "#000000"    
+    property string activeEffectName: LEDC.currentEffect;
+    property string activeEffectColor: LEDC.currentColor;
+    property string buttonFontColor: Material.theme === Material.Dark ? "#ffffff" : "#000000"
+    property string activePort: ArduinoComm.selectedPort
 
-    LEDC { id: ledControl }
+    onActivePortChanged: LEDC.pullArduinoParameters()
+
+//    LEDC { id: ledControl }
 
     // Presets label
     Label {
@@ -51,27 +54,27 @@ Item {
         Preset {
             id: preset1
 
-            presetColor: {ledControl.presetColors[0] !== undefined ? ledControl.presetColors[0] : "#000000"}
-            presetEffect: {ledControl.presetEffects[0] !== undefined ? ledControl.presetEffects[0] : "question_mark"}
+            presetColor: {LEDC.presetColors[0] !== undefined ? LEDC.presetColors[0] : "#000000"}
+            presetEffect: {LEDC.presetEffects[0] !== undefined ? LEDC.presetEffects[0] : "question_mark"}
 
             anchors {
                 top: parent.top
                 left: parent.left
             }
 
-            onSelectedEffectChanged: ledControl.changePreset(0, selectedEffect, selectedColor)
-            onSelectedColorChanged: ledControl.changePreset(0, selectedEffect, selectedColor)
+            onSelectedEffectChanged: LEDC.changePreset(0, selectedEffect, selectedColor)
+            onSelectedColorChanged: LEDC.changePreset(0, selectedEffect, selectedColor)
             onPresetPressAndHold: {
-                ledControl.setActivePreset(0);
-                ledControl.setShowCurrentEffect(false);
+                LEDC.setActivePreset(0);
+                LEDC.setShowCurrentEffect(false);
             }
         }
 
         Preset {
             id: preset2
 
-            presetColor: {ledControl.presetColors[1] !== undefined ? ledControl.presetColors[1] : "#000000"}
-            presetEffect: {ledControl.presetEffects[1] !== undefined ? ledControl.presetEffects[1] : "question_mark"}
+            presetColor: {LEDC.presetColors[1] !== undefined ? LEDC.presetColors[1] : "#000000"}
+            presetEffect: {LEDC.presetEffects[1] !== undefined ? LEDC.presetEffects[1] : "question_mark"}
 
             anchors {
                 top: parent.top
@@ -80,19 +83,19 @@ Item {
                 leftMargin: 8
             }
 
-            onSelectedEffectChanged: ledControl.changePreset(1, selectedEffect, selectedColor)
-            onSelectedColorChanged: ledControl.changePreset(1, selectedEffect, selectedColor)
+            onSelectedEffectChanged: LEDC.changePreset(1, selectedEffect, selectedColor)
+            onSelectedColorChanged: LEDC.changePreset(1, selectedEffect, selectedColor)
             onPresetPressAndHold: {
-                ledControl.setActivePreset(1);
-                ledControl.setShowCurrentEffect(false);
+                LEDC.setActivePreset(1);
+                LEDC.setShowCurrentEffect(false);
             }
         }
 
         Preset {
             id: preset3
 
-            presetColor: {ledControl.presetColors[2] !== undefined ? ledControl.presetColors[2] : "#000000"}
-            presetEffect: {ledControl.presetEffects[2] !== undefined ? ledControl.presetEffects[2] : "question_mark"}
+            presetColor: {LEDC.presetColors[2] !== undefined ? LEDC.presetColors[2] : "#000000"}
+            presetEffect: {LEDC.presetEffects[2] !== undefined ? LEDC.presetEffects[2] : "question_mark"}
 
             anchors {
                 top: parent.top
@@ -101,19 +104,19 @@ Item {
                 leftMargin: 8
             }
 
-            onSelectedEffectChanged: ledControl.changePreset(2, selectedEffect, selectedColor)
-            onSelectedColorChanged: ledControl.changePreset(2, selectedEffect, selectedColor)
+            onSelectedEffectChanged: LEDC.changePreset(2, selectedEffect, selectedColor)
+            onSelectedColorChanged: LEDC.changePreset(2, selectedEffect, selectedColor)
             onPresetPressAndHold: {
-                ledControl.setActivePreset(2);
-                ledControl.setShowCurrentEffect(false);
+                LEDC.setActivePreset(2);
+                LEDC.setShowCurrentEffect(false);
             }
         }
 
         Preset {
             id: preset4
 
-            presetColor: {ledControl.presetColors[3] !== undefined ? ledControl.presetColors[3] : "#000000"}
-            presetEffect: {ledControl.presetEffects[3] !== undefined ? ledControl.presetEffects[3] : "question_mark"}
+            presetColor: {LEDC.presetColors[3] !== undefined ? LEDC.presetColors[3] : "#000000"}
+            presetEffect: {LEDC.presetEffects[3] !== undefined ? LEDC.presetEffects[3] : "question_mark"}
 
             anchors {
                 top: parent.top
@@ -122,19 +125,19 @@ Item {
                 leftMargin: 8
             }
 
-            onSelectedEffectChanged: ledControl.changePreset(3, selectedEffect, selectedColor)
-            onSelectedColorChanged: ledControl.changePreset(3, selectedEffect, selectedColor)
+            onSelectedEffectChanged: LEDC.changePreset(3, selectedEffect, selectedColor)
+            onSelectedColorChanged: LEDC.changePreset(3, selectedEffect, selectedColor)
             onPresetPressAndHold: {
-                ledControl.setActivePreset(3);
-                ledControl.setShowCurrentEffect(false);
+                LEDC.setActivePreset(3);
+                LEDC.setShowCurrentEffect(false);
             }
         }
 
         Preset {
             id: preset5
 
-            presetColor: {ledControl.presetColors[4] !== undefined ? ledControl.presetColors[4] : "#000000"}
-            presetEffect: {ledControl.presetEffects[4] !== undefined ? ledControl.presetEffects[4] : "question_mark"}
+            presetColor: {LEDC.presetColors[4] !== undefined ? LEDC.presetColors[4] : "#000000"}
+            presetEffect: {LEDC.presetEffects[4] !== undefined ? LEDC.presetEffects[4] : "question_mark"}
 
             anchors {
                 top: parent.top
@@ -143,19 +146,19 @@ Item {
                 leftMargin: 8
             }
 
-            onSelectedEffectChanged: ledControl.changePreset(4, selectedEffect, selectedColor)
-            onSelectedColorChanged: ledControl.changePreset(4, selectedEffect, selectedColor)
+            onSelectedEffectChanged: LEDC.changePreset(4, selectedEffect, selectedColor)
+            onSelectedColorChanged: LEDC.changePreset(4, selectedEffect, selectedColor)
             onPresetPressAndHold: {
-                ledControl.setActivePreset(4);
-                ledControl.setShowCurrentEffect(false);
+                LEDC.setActivePreset(4);
+                LEDC.setShowCurrentEffect(false);
             }
         }
 
         Preset {
             id: preset6
 
-            presetColor: {ledControl.presetColors[5] !== undefined ? ledControl.presetColors[5] : "#000000"}
-            presetEffect: {ledControl.presetEffects[5] !== undefined ? ledControl.presetEffects[5] : "question_mark"}
+            presetColor: {LEDC.presetColors[5] !== undefined ? LEDC.presetColors[5] : "#000000"}
+            presetEffect: {LEDC.presetEffects[5] !== undefined ? LEDC.presetEffects[5] : "question_mark"}
 
             anchors {
                 top: parent.top
@@ -164,11 +167,11 @@ Item {
                 leftMargin: 8
             }
 
-            onSelectedEffectChanged: ledControl.changePreset(5, selectedEffect, selectedColor)
-            onSelectedColorChanged: ledControl.changePreset(5, selectedEffect, selectedColor)
+            onSelectedEffectChanged: LEDC.changePreset(5, selectedEffect, selectedColor)
+            onSelectedColorChanged: LEDC.changePreset(5, selectedEffect, selectedColor)
             onPresetPressAndHold: {
-                ledControl.setActivePreset(5);
-                ledControl.setShowCurrentEffect(false);
+                LEDC.setActivePreset(5);
+                LEDC.setShowCurrentEffect(false);
             }
         }
     }
@@ -207,7 +210,7 @@ Item {
 
             effectIconWidth: 96
             effectIconHeight: 96
-            effectIconSource: "qrc:/icons/static.svg"
+            effectIconSource: "qrc:/icons/s.svg"
             effectNameText: "Static"
 
             anchors {
@@ -215,7 +218,7 @@ Item {
                 left: parent.left
             }
 
-            onEffectClicked: ledControl.setCurrentEffect("static")
+            onEffectClicked: LEDC.setCurrentEffect("s")
         }
 
         Effect {
@@ -223,7 +226,7 @@ Item {
 
             effectIconWidth: 96
             effectIconHeight: 96
-            effectIconSource: "qrc:/icons/pulse.svg"
+            effectIconSource: "qrc:/icons/p.svg"
             effectNameText: "Pulse"
 
             anchors {
@@ -233,7 +236,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: ledControl.setCurrentEffect("pulse")
+            onEffectClicked: LEDC.setCurrentEffect("p")
         }
 
         Effect {
@@ -241,7 +244,7 @@ Item {
 
             effectIconWidth: 96
             effectIconHeight: 96
-            effectIconSource: "qrc:/icons/flash.svg"
+            effectIconSource: "qrc:/icons/f.svg"
             effectNameText: "Flash"
 
             anchors {
@@ -251,7 +254,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: ledControl.setCurrentEffect("flash")
+            onEffectClicked: LEDC.setCurrentEffect("f")
         }
 
         Effect {
@@ -259,7 +262,7 @@ Item {
 
             effectIconWidth: 96
             effectIconHeight: 96
-            effectIconSource: "qrc:/icons/double_flash.svg"
+            effectIconSource: "qrc:/icons/df.svg"
             effectNameText: "Double flash"
 
             anchors {
@@ -269,7 +272,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: ledControl.setCurrentEffect("double_flash")
+            onEffectClicked: LEDC.setCurrentEffect("df")
         }
 
         Effect {
@@ -277,7 +280,7 @@ Item {
 
             effectIconWidth: 96
             effectIconHeight: 96
-            effectIconSource: "qrc:/icons/cycle.svg"
+            effectIconSource: "qrc:/icons/c.svg"
             effectNameText: "Cycle"
 
             anchors {
@@ -287,7 +290,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: ledControl.setCurrentEffect("cycle")
+            onEffectClicked: LEDC.setCurrentEffect("c")
         }
 
         Effect {
@@ -295,7 +298,7 @@ Item {
 
             effectIconWidth: 96
             effectIconHeight: 96
-            effectIconSource: "qrc:/icons/wave.svg"
+            effectIconSource: "qrc:/icons/w.svg"
             effectNameText: "Wave"
 
             anchors {
@@ -305,7 +308,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: ledControl.setCurrentEffect("wave")
+            onEffectClicked: LEDC.setCurrentEffect("w")
         }
 
         Effect {
@@ -313,7 +316,7 @@ Item {
 
             effectIconWidth: 96
             effectIconHeight: 96
-            effectIconSource: "qrc:/icons/lightbulb_off.svg"
+            effectIconSource: "qrc:/icons/o.svg"
             effectNameText: "Off"
 
             anchors {
@@ -323,7 +326,7 @@ Item {
                 leftMargin: effectsHorizontalMargin
             }
 
-            onEffectClicked: ledControl.setCurrentEffect("off")
+            onEffectClicked: LEDC.setCurrentEffect("o")
         }
     }
 
@@ -339,9 +342,9 @@ Item {
             topMargin: 12
         }
 
-        onActiveColorChanged: ledControl.setCurrentColor(activeColor)
+        onActiveColorChanged: activeColor !== LEDC.currentColor ? LEDC.setCurrentColor(activeColor) : 0
 
-        visible: activeEffectName !== "cycle" && activeEffectName !== "off"
+        visible: activeEffectName !== "c" && activeEffectName !== "o"
     }
 
     EffectPreview {
@@ -357,7 +360,7 @@ Item {
             topMargin: 24
         }
 
-        visible: activeEffectName !== "off"
+        visible: activeEffectName !== "o"
     }
 
     Button {
@@ -377,6 +380,6 @@ Item {
             topMargin: 24
         }
 
-        onClicked: ledControl.setShowCurrentEffect(true);
+        onClicked: LEDC.setShowCurrentEffect(true);
     }
 }

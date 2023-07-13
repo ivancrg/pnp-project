@@ -10,20 +10,20 @@
         <file>icons/dark_mode.svg</file>
         <file>icons/light_mode.svg</file>
         <file>icons/question_mark.svg</file>
-        <file>icons/cycle.png</file>
-        <file>icons/double_flash.png</file>
-        <file>icons/flash.png</file>
-        <file>icons/pulse.png</file>
-        <file>icons/static.png</file>
-        <file>icons/wave.png</file>
+        <file>icons/c.png</file>
+        <file>icons/df.png</file>
+        <file>icons/f.png</file>
+        <file>icons/p.png</file>
+        <file>icons/s.png</file>
+        <file>icons/w.png</file>
         <file>icons/attribution.txt</file>
-        <file>icons/cycle.svg</file>
-        <file>icons/double_flash.svg</file>
-        <file>icons/flash.svg</file>
-        <file>icons/pulse.svg</file>
-        <file>icons/static.svg</file>
-        <file>icons/wave.svg</file>
-        <file>icons/lightbulb_off.svg</file>
+        <file>icons/c.svg</file>
+        <file>icons/df.svg</file>
+        <file>icons/f.svg</file>
+        <file>icons/p.svg</file>
+        <file>icons/s.svg</file>
+        <file>icons/w.svg</file>
+        <file>icons/o.svg</file>
         <file>qt-project.org/imports/QtGraphicalEffects/shaders_ng/brightnesscontrast.frag</file>
         <file>qt-project.org/imports/QtGraphicalEffects/shaders_ng/brightnesscontrast.frag.qsb</file>
         <file>qt-project.org/imports/QtGraphicalEffects/shaders_ng/colorize.frag</file>

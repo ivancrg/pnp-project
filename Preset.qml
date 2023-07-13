@@ -19,7 +19,7 @@ Rectangle {
     // signal presetClicked
     property string presetColor: "#000000"
     property string selectedColor: presetColor
-    property string presetEffect: "static"
+    property string presetEffect: "s"
     property string selectedEffect: presetEffect
     property string presetEffectIconSource: "qrc:/icons/" + presetEffect + ".svg"
     property real presetWidth: 50
@@ -81,7 +81,7 @@ Rectangle {
 
             Effect {
                 id: staticEffect
-                effectIconSource: "qrc:/icons/static.svg"
+                effectIconSource: "qrc:/icons/s.svg"
                 effectNameText: "Static"
 
                 anchors {
@@ -91,14 +91,14 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.selectedEffect = "static"
+                    root.selectedEffect = "s"
                     effectDialog.close()
                 }
             }
 
             Effect {
                 id: pulseEffect
-                effectIconSource: "qrc:/icons/pulse.svg"
+                effectIconSource: "qrc:/icons/p.svg"
                 effectNameText: "Pulse"
 
                 anchors {
@@ -108,14 +108,14 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.selectedEffect = "pulse"
+                    root.selectedEffect = "p"
                     effectDialog.close()
                 }
             }
 
             Effect {
                 id: flashEffect
-                effectIconSource: "qrc:/icons/flash.svg"
+                effectIconSource: "qrc:/icons/f.svg"
                 effectNameText: "Flash"
 
                 anchors {
@@ -125,14 +125,14 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.selectedEffect = "flash"
+                    root.selectedEffect = "f"
                     effectDialog.close()
                 }
             }
 
             Effect {
                 id: doubleFlashEffect
-                effectIconSource: "qrc:/icons/double_flash.svg"
+                effectIconSource: "qrc:/icons/df.svg"
                 effectNameText: "Double flash"
 
                 anchors {
@@ -142,14 +142,14 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.selectedEffect = "double_flash"
+                    root.selectedEffect = "df"
                     effectDialog.close()
                 }
             }
 
             Effect {
                 id: cycleEffect
-                effectIconSource: "qrc:/icons/cycle.svg"
+                effectIconSource: "qrc:/icons/c.svg"
                 effectNameText: "Cycle"
 
                 anchors {
@@ -159,14 +159,14 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.selectedEffect = "cycle"
+                    root.selectedEffect = "c"
                     effectDialog.close()
                 }
             }
 
             Effect {
                 id: waveEffect
-                effectIconSource: "qrc:/icons/wave.svg"
+                effectIconSource: "qrc:/icons/w.svg"
                 effectNameText: "Wave"
 
                 anchors {
@@ -176,14 +176,14 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.selectedEffect = "wave"
+                    root.selectedEffect = "w"
                     effectDialog.close()
                 }
             }
 
             Effect {
                 id: offEffect
-                effectIconSource: "qrc:/icons/lightbulb_off.svg"
+                effectIconSource: "qrc:/icons/o.svg"
                 effectNameText: "Off"
 
                 anchors {
@@ -193,7 +193,7 @@ Rectangle {
                 }
 
                 onEffectClicked: {
-                    root.selectedEffect = "lightbulb_off"
+                    root.selectedEffect = "o"
                     effectDialog.close()
                 }
             }

@@ -39,6 +39,7 @@ public slots:
     void changeRelay(QString, QVariant);
     void updateArduinoParameters();
 
+    void processVariable(QString data);
 private:
     QVariantMap m_temperatures;
     QVariantMap m_relays;

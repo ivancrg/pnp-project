@@ -23,27 +23,25 @@ signals:
     void availablePortsNamesChanged();
 
 public slots:
-    QString getVariable(QString id);
+    void getVariable(QString id);
     bool setVariable(QString id, QString payload);
     void setSelectedPort(QString);
     void setAvailablePortsNames(QVector<QString>);
     void refreshAvailablePorts();
+    void setLedControl(QObject *);
+    void setHeatingControl(QObject *);
 
 private slots:
     QString read();
     bool write(QString data);
 
 private:
-    QSerialPort *m_arduino;
+    QSerialPort *m_arduino = nullptr;
     QString m_selectedPort;
     QVector<QString> m_availablePortsNames;
+    bool serialReady = false;
+    QObject *m_ledControl;
+    QObject *m_heatingControl;
 };
 
 #endif // ARDUINOCOMMUNICATION_H
-
-
-/*
-    const auto infos = QSerialPortInfo::availablePorts();
-    for (const QSerialPortInfo &info : infos)
-        m_serialPortComboBox->addItem(info.portName());
-*/

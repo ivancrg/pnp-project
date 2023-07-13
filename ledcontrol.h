@@ -3,7 +3,7 @@
 #define LEDCONTROL_H
 
 #include <QObject>
-#include "arduinocommunication.h"
+#include <arduinocommunication.h>
 
 class LEDControl : public QObject
 {
@@ -42,6 +42,10 @@ public slots:
     void setActivePreset(int);
     void pullArduinoParameters();
     void pushArduinoParameters();
+    void setAc(ArduinoCommunication *);
+    void processVariable(QString);
+    void processSimpleVariable(QString, QString);
+    void processArrayVariable(QString, QString);
 
 private slots:
 
@@ -52,7 +56,7 @@ private:
     QVector<QString> m_presetColors;
     bool m_showCurrentEffect;
     int m_activePreset;
-    ArduinoCommunication m_ac;
+    ArduinoCommunication *m_ac;
 };
 
 #endif // LEDCONTROL_H

@@ -134,8 +134,6 @@ ApplicationWindow {
         }
     }
 
-    Component.onCompleted: console.log(ArduinoComm.read())
-
     Drawer {
         id: drawer
         width: aspectRatio < 0.75 ? 0.66 * window.width : 0.33 * window.width

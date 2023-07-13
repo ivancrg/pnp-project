@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
     QFontDatabase::addApplicationFont(":/fonts/materialdesignicons-webfont.ttf");
 
-    qmlRegisterType<LEDControl> ("LEDControl", 1, 0, "LEDC");
+    //qmlRegisterType<LEDControl> ("LEDControl", 1, 0, "LEDC");
     qmlRegisterType<HeatingControl> ("HeatingControl", 1, 0, "HeatingC");
     //qmlRegisterType<ArduinoCommunication> ("ArduinoCommunication", 1, 0, "ArduinoCom");
 
@@ -26,13 +26,18 @@ int main(int argc, char *argv[])
 
     engine.addImportPath(app.applicationDirPath());
 
+    QQmlContext *rootContext = engine.rootContext();
+    rootContext->setContextProperty("ArduinoComm", &arduinoCommunication);
+    rootContext->setContextProperty("LEDC", &ledControl);
+    //rootContext->setContextProperty("HeatingC", &heatingControl);
+
+    ledControl.setAc(&arduinoCommunication);
+    arduinoCommunication.setLedControl(&ledControl);
+
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
         &app, []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
     engine.load(url);
-
-    QQmlContext *rootContext = engine.rootContext();
-    rootContext->setContextProperty("ArduinoComm", &arduinoCommunication);
 
     return app.exec();
 }

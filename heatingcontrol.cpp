@@ -103,3 +103,13 @@ void HeatingControl::updateArduinoParameters()
     qDebug() << m_relays << Qt::endl << m_temperatures;
     qDebug() << "Refresh ALL HEATING parameeters (send update to Arduino)! TODO!";
 }
+
+void HeatingControl::processVariable(QString data)
+{
+    QStringList args = data.split(":");
+    if (args.length() < 2) return;
+
+    QString id = args[0];
+    QString value = args[1].trimmed();
+    qDebug() << "HeatingControl to process data, " << id << ":" << value;
+}
