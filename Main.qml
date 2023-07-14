@@ -95,38 +95,12 @@ ApplicationWindow {
         onClicked: ArduinoComm.refreshAvailablePorts()
     }
 
-    Button {
-        id: test
-        text: "Test"
-        font.pixelSize: 12
-
-        icon.color: Material.color(Material.Teal)
-        icon.source: "qrc:/icons/refresh.svg"
-
-        // Hiding background shading
-        highlighted: true
-        Material.accent: "#00ffffff"
-        Material.foreground: buttonFontColor
-
-        anchors {
-            left: refreshPorts.right
-            verticalCenter: comPortCombo.verticalCenter
-
-            leftMargin: 32
-        }
-
-        onClicked: {
-            ArduinoComm.write(light ? "1" : 0);
-            light = !light;
-        }
-    }
-
     Label {
         id: currentPort
         text: "Selected port: "
                 + (ArduinoComm.selectedPort !== "" ? ArduinoComm.selectedPort : "N/A")
         font.pixelSize: 12
-        color: ArduinoComm.selectedPort == "" ? "darkred" : Material.primaryTextColor
+        color: ArduinoComm.selectedPort === "" ? "darkred" : Material.primaryTextColor
 
         anchors {
             left: parent.left
